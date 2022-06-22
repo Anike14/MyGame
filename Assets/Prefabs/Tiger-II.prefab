@@ -97,6 +97,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 893e69215da574c40999fb8b0781182a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _playerInput: {fileID: 0}
+  _maximumMovement: 5
+  _stepConsumption: 1.5
+  _armor: 175
+  _armorWeakness: 30
+  _penetration: 180
+  _stealth:
+  - 70
+  - 50
+  - 40
+  - 30
+  - 20
+  - 10
 --- !u!1 &4290033574360108228
 GameObject:
   m_ObjectHideFlags: 0

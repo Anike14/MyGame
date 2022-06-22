@@ -1,9 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.InputSystem;
 using UnityEngine;
 
 public class HeavyTank : MonoBehaviour
 {
+	//[SerializeField]
+	//GameConfigObject
+	
+
     [SerializeField]
 	PlayerInput _playerInput = null;
 
@@ -24,7 +29,7 @@ public class HeavyTank : MonoBehaviour
 	float _penetration = 180.0f;
 
 	[SerializeField]
-	float[] _stealth = new float[6];
+	float[] _stealth = new float[]{70,50,40,30,20,10};
 
     // Start is called before the first frame update
     void Start()
