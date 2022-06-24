@@ -1,17 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine.InputSystem;
 using UnityEngine;
 
-public class HeavyTank : MonoBehaviour
+public class Tank : MonoBehaviour
 {
-	//[SerializeField]
-	//GameConfigObject
-	
-
-    [SerializeField]
-	PlayerInput _playerInput = null;
-
 	[SerializeField]
 	int _maximumMovement = 5;
 
@@ -30,16 +22,4 @@ public class HeavyTank : MonoBehaviour
 
 	[SerializeField]
 	float[] _stealth = new float[]{70,50,40,30,20,10};
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

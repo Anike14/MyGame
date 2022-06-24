@@ -11,9 +11,9 @@ TagManager:
   - 
   - Water
   - UI
-  - battleField-Water
-  - battleField-Land
-  - battleField-Air
+  - Unit-Water
+  - Unit-Land
+  - Unit-Air
   - 
   - 
   - 
@@ -40,4 +40,31 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Land
+    uniqueID: 1309775645
+    locked: 0
+  - name: Water
+    uniqueID: 4115987441
+    locked: 0
+  - name: Sea
+    uniqueID: 1472130399
+    locked: 0
+  - name: Grasses
+    uniqueID: 3793342105
+    locked: 0
+  - name: Forests
+    uniqueID: 2846118601
+    locked: 0
+  - name: Rocks
+    uniqueID: 963474333
+    locked: 0
+  - name: Mountains
+    uniqueID: 172839645
+    locked: 0
+  - name: LandUnit
+    uniqueID: 3413221645
+    locked: 0
+  - name: AirUnit
+    uniqueID: 964878721
     locked: 0
