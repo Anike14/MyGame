@@ -17,6 +17,7 @@ public class UnitMovement : MonoBehaviour
     
     // selected unit
 	private GameObject selectedObject;
+    private UnitBase selectedUnit;
     private FlashFeedback flashFeedback;
 
     // moving related
@@ -51,6 +52,7 @@ public class UnitMovement : MonoBehaviour
         lastClickedPos = _tilemap.GetCellCenterWorld(_tilemap.WorldToCell(selectedObject.transform.position));
 
         if (selectedObject != null) {
+            selectedUnit = selectedObject.transform.GetChild(0).GetComponent<UnitBase>();
             flashFeedback = selectedObject.GetComponent<FlashFeedback>();
             flashFeedback.PlayerFeedback();
         }
@@ -63,7 +65,21 @@ public class UnitMovement : MonoBehaviour
         Vector3Int targetPosition = _tilemap.WorldToCell(_currentCamera.ScreenToWorldPoint(Input.mousePosition)),
                 currentPosition = _tilemap.WorldToCell(selectedObject.transform.position);
         int distance = Mathf.Abs(targetPosition.x - currentPosition.x) + Mathf.Abs(targetPosition.y - currentPosition.y);
-        lastClickedPos = _tilemap.GetCellCenterWorld(targetPosition);
-        moving = true;
+        if (selectedUnit._unitType == "Tank") {
+            Tank tank = (Tank)selectedUnit;
+            Debug.Log("tank._maximumMovement: " + tank._maximumMovement);
+            Debug.Log("distance: " + distance);
+            if (tank._maximumMovement < distance) deselect();
+            else {
+                lastClickedPos = _tilemap.GetCellCenterWorld(targetPosition);
+                moving = true;
+            }
+        }
+    }
+
+    void deselect() {
+        flashFeedback.StopFeedBack();
+        selectedUnit = null;
+        selectedObject = null;
     }
 }

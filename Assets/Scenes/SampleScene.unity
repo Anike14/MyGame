@@ -3357,6 +3357,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 893e69215da574c40999fb8b0781182a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _unitType: 
   _maximumMovement: 5
   _stepConsumption: 1.5
   _armor: 175
@@ -19187,6 +19188,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2816432020848638116, guid: c4362d350f1e206468947a83fc2788ae, type: 3}
+      propertyPath: _unitType
+      value: Tank
+      objectReference: {fileID: 0}
     - target: {fileID: 3633781401086625690, guid: c4362d350f1e206468947a83fc2788ae, type: 3}
       propertyPath: m_Name
       value: Tiger-II
