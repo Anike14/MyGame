@@ -6,13 +6,19 @@ using UnityEngine.Events;
 
 public class PlayerInputHandler : MonoBehaviour
 {
+    [SerializeField]
 	public Camera _currentCamera;
+    [SerializeField]
 	public LayerMask _layerMask;
-	public float _threshold = 0.5f;
+    [SerializeField]
+	private UnityEvent OnHandleUpdate;
+    [SerializeField]
+	private UnityEvent<GameObject> OnHandleSelection;
+    [SerializeField]
+    private UnityEvent<Vector3> OnHandleMovement;
     
-	private UnityEvent<GameObject> HandleMouseClickEvent;
-    private UnityEvent<Vector3> HandleMovementEvent;
-    
+	private GameObject selectedObject;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -23,21 +29,38 @@ public class PlayerInputHandler : MonoBehaviour
     void Update()
     {
         if (Input.GetMouseButtonDown(0)) {
-			HandleMouseClick();
+			if (selectedObject == null)
+                HandleSelection();
+            else HandleMove();
         }
 
-        if (Input.GetMouseButtonUp(0)) {
-			HandleMouseUp();
-        }
+        OnHandleUpdate?.Invoke();
     }
 
-    void HandleMouseClick() {
+
+    private void HandleSelection() {
 		Vector3 mouseInput = _currentCamera.ScreenToWorldPoint(Input.mousePosition);
 		mouseInput.z = 0f;
 		Collider2D collider = Physics2D.OverlapPoint(mouseInput, _layerMask);
-		GameObject selectedObject = collider == null ? null : collider.gameObject;
+		selectedObject = collider == null ? null : collider.gameObject;
+        if (selectedObject != null) {
+            OnHandleSelection?.Invoke(selectedObject);
+        }
 	}
 
-	void HandleMouseUp () {
+	private void HandleMove() {
+        Vector3 mouseInput = _currentCamera.ScreenToWorldPoint(Input.mousePosition);
+		mouseInput.z = 0f;
+        
+		Collider2D collider = Physics2D.OverlapPoint(mouseInput, _layerMask);
+        if (collider != null) {
+            HandleSelection();
+            return;
+        }
+        OnHandleMovement?.Invoke(mouseInput);
 	}
+
+    public void handleDeselect() {
+        this.selectedObject = null;
+    }
 }

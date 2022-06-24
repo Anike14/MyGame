@@ -4,22 +4,21 @@ using UnityEngine;
 
 public class Tank : UnitBase
 {
-	[SerializeField]
-	public int _maximumMovement = 5;
+    [SerializeField]
+	public int _maximumMovement;
 
 	[SerializeField]
-	public float _stepConsumption = 1.5f;
+	public float _stepConsumption;
 
 	[SerializeField]
-	public float _armor = 175.0f;
+	public float _armor;
 
 	[SerializeField]
-    // percentage: 30%
-	public float _armorWeakness = 30.0f;
+	public float _armorWeakness;
 
 	[SerializeField]
-	public float _penetration = 180.0f;
+	public float _penetration;
 
 	[SerializeField]
-	public float[] _stealth = new float[]{70,50,40,30,20,10};
+	public float[] _stealth = new float[6];
 }
