@@ -14,7 +14,7 @@ TagManager:
   - Unit-Water
   - Unit-Land
   - Unit-Air
-  - 
+  - MovableRange
   - 
   - 
   - 
@@ -67,4 +67,7 @@ TagManager:
     locked: 0
   - name: AirUnit
     uniqueID: 964878721
+    locked: 0
+  - name: MovableRange
+    uniqueID: 1471011279
     locked: 0

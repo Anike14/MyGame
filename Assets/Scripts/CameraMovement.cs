@@ -9,10 +9,10 @@ public class CameraMovement : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        _leftLimit = -34f;
-        _rightLimit = 39.2f;
-        _toppLimit = 18.3f;
-        _bottomLimit = -16f;
+        _leftLimit = -26f;
+        _rightLimit = 31f;
+        _toppLimit = 12.5f;
+        _bottomLimit = -12.5f;
     }
 
     // Update is called once per frame

@@ -13,15 +13,19 @@ public class UnitMovement : MonoBehaviour
     public Tilemap _tilemap;
     [SerializeField]
     private UnityEvent OnSelectedObjectDeselect;
+    [SerializeField]
+    private MapManager mapManager;
+    [SerializeField]
+    private MovementRangeHighlight movementRangeHighlight;
     
     // selected unit
 	private GameObject selectedObject;
     private UnitBase selectedUnit;
-    private FlashFeedback flashFeedback;
-
 
     // moving related
+    private List<Vector2Int> movableRange;
     private Vector2 lastClickedPos;
+    private Vector3 originalPosition;
 
     public void HandleUpdate() {
         if (selectedObject != null && (Vector2)selectedObject.transform.position != lastClickedPos) {
@@ -30,21 +34,25 @@ public class UnitMovement : MonoBehaviour
     }
 
     public void HandleSelection(GameObject selection) {
-        if (selection != null) {
-            this.selectedObject = selection;
-            lastClickedPos = _tilemap.GetCellCenterWorld(_tilemap.WorldToCell(selectedObject.transform.position));
-            selectedUnit = selectedObject.transform.GetChild(0).GetComponent<UnitBase>();
-            flashFeedback = selectedObject.GetComponent<FlashFeedback>();
-            flashFeedback.PlayerFeedback();
+        if (this.selectedObject != null)
+            this.selectedObject.transform.position = originalPosition;
+        this.selectedObject = selection;
+        lastClickedPos = _tilemap.GetCellCenterWorld(_tilemap.WorldToCell(selectedObject.transform.position));
+        selectedUnit = selectedObject.transform.GetChild(0).GetComponent<UnitBase>();
+        if (selectedUnit._unitType == "Tank") {
+            Tank tank = (Tank)selectedUnit;
+            movableRange = mapManager.GetMovementRange(
+                _tilemap.WorldToCell(selectedObject.transform.position), 
+                tank._maximumMovement, tank._stepConsumption, 1000);
+            movementRangeHighlight.PaintTileForMovable(movableRange);
+            originalPosition = selectedObject.transform.position;
         }
 	}
 
 	public void HandleMovement(Vector3 mouseInput) {
-        Debug.Log("-----------------");
         if (selectedObject == null) return;
-        flashFeedback.StopFeedBack();
         Vector3Int targetPosition = _tilemap.WorldToCell(mouseInput),
-                currentPosition = _tilemap.WorldToCell(selectedObject.transform.position);
+                currentPosition = _tilemap.WorldToCell(originalPosition);
         int distance = Mathf.Abs(targetPosition.x - currentPosition.x) + Mathf.Abs(targetPosition.y - currentPosition.y);
         if (selectedUnit._unitType == "Tank") {
             Tank tank = (Tank)selectedUnit;
@@ -54,11 +62,11 @@ public class UnitMovement : MonoBehaviour
                 lastClickedPos = _tilemap.GetCellCenterWorld(targetPosition);
             }
         }
-        Debug.Log(lastClickedPos);
     }
 
     private void deselect() {
-        flashFeedback.StopFeedBack();
+        selectedObject.transform.position = originalPosition;
+        movementRangeHighlight.ClearMovable();
         selectedUnit = null;
         selectedObject = null;
         OnSelectedObjectDeselect?.Invoke();

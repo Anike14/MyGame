@@ -4,13 +4,14 @@ using UnityEngine;
 
 public class TigerTwo : Tank
 {
-	void start()
-    {
-        _maximumMovement = 5;
+    void start() {
+        _unitType = "Tank";
+        _maximumMovement = 4;
         _stepConsumption = 1.5f;
-        _armor = 18.3f;
+        _armor = 175f;
         _armorWeakness = 30f;
-		_penetration = 180f;
-		_stealth = new float[]{70,50,40,30,20,10};
+        _penetration = 180f;
+        _stealth = new float[]{70,50,40,30,20,10};
     }
+		
 }

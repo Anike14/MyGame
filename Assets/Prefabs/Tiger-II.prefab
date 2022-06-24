@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5776981260230570145}
   - component: {fileID: 3270100401933862788}
-  - component: {fileID: 2816432020848638116}
+  - component: {fileID: 9183201931295708983}
   m_Layer: 0
   m_Name: Tiger-II
   m_TagString: Untagged
@@ -85,7 +85,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &2816432020848638116
+--- !u!114 &9183201931295708983
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -97,7 +97,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 893e69215da574c40999fb8b0781182a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _maximumMovement: 5
+  _unitType: Tank
+  _maximumMovement: 4
   _stepConsumption: 1.5
   _armor: 175
   _armorWeakness: 30
@@ -119,7 +120,6 @@ GameObject:
   m_Component:
   - component: {fileID: 3633781401086625691}
   - component: {fileID: 3633781401086625692}
-  - component: {fileID: 5089645836179729783}
   m_Layer: 7
   m_Name: Tiger-II
   m_TagString: Untagged
@@ -169,18 +169,3 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 2.35, y: 1.1}
   m_EdgeRadius: 0
---- !u!114 &5089645836179729783
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3633781401086625690}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 08e4a2e02f4f890438af195198d79199, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _spriteRenderer: {fileID: 3270100401933862788}
-  _invisibleTime: 0.3
-  _visibleTime: 0.7
