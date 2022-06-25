@@ -14,14 +14,23 @@ public class MapManager : MonoBehaviour
     private List<Vector2Int> landTiles, grassTiles, 
         forestTiles, rocksTiles, mountainTiles, waterTiles, seaTiles;
 
-    public readonly static List<Vector2Int> dirs = 
+    public readonly static List<Vector2Int> oddYDirs = 
         new List<Vector2Int> {
             new Vector2Int(1,0),
             new Vector2Int(-1,0),
             new Vector2Int(0,-1),
             new Vector2Int(0,1),
-            new Vector2Int(-1,-1),
-            new Vector2Int(1,1)
+            new Vector2Int(1,1),
+            new Vector2Int(1,-1)
+        };
+    public readonly static List<Vector2Int> evenYDirs = 
+        new List<Vector2Int> {
+            new Vector2Int(1,0),
+            new Vector2Int(-1,0),
+            new Vector2Int(0,-1),
+            new Vector2Int(0,1),
+            new Vector2Int(-1,1),
+            new Vector2Int(-1,-1)
         };
 
     // void Awake()
@@ -67,34 +76,37 @@ public class MapManager : MonoBehaviour
         tilesToBeVisited.Enqueue(startCell);
         visitedTiles.Add(startCell);
 
-        while (tilesToBeVisited.Count > 0)
-        {
-            Vector2Int currentTile = tilesToBeVisited.Dequeue();
-            int distance = Mathf.Abs(currentTile.x - startCell.x) + Mathf.Abs(currentTile.y - startCell.y);
-            if (distance > maximumMovement) continue;
-            foreach (Vector2Int neighbourPosition in GetNeighboursFor(currentTile)) {
-                if (!visitedTiles.Contains(neighbourPosition)) {
-                    if (!visitedTiles.Contains(currentTile))
-                        visitedTiles.Add(currentTile);
-                    tilesToBeVisited.Enqueue(neighbourPosition);
+        int counter = 0;
+        while (tilesToBeVisited.Count > 0) {
+            Queue<Vector2Int> tilesToBeVisited_Next_Round = new Queue<Vector2Int>();
+            while (tilesToBeVisited.Count > 0) {
+                Vector2Int currentTile = tilesToBeVisited.Dequeue();
+                if (!visitedTiles.Contains(currentTile))
+                    visitedTiles.Add(currentTile);
+                foreach (Vector2Int neighbourPosition in GetNeighboursFor(currentTile)) {
+                    if (!visitedTiles.Contains(neighbourPosition)
+                        && !tilesToBeVisited.Contains(neighbourPosition)
+                        && !tilesToBeVisited_Next_Round.Contains(neighbourPosition)) {
+                        tilesToBeVisited_Next_Round.Enqueue(neighbourPosition);
+                    }
                 }
             }
+            if (counter++ == maximumMovement) break;
+            if (tilesToBeVisited_Next_Round.Count > 0) tilesToBeVisited = tilesToBeVisited_Next_Round;
         }
-
         return visitedTiles;
     }
 
     public static List<Vector2Int> GetNeighboursFor(Vector2Int tileCellPosition)
     {
-        List<Vector2Int> positions = new List<Vector2Int>();
-
-        foreach (Vector2Int dir in dirs)
-        {
+        List<Vector2Int> Neighbours = new List<Vector2Int>(),
+            dirs = tileCellPosition.y % 2 == 0 ? evenYDirs : oddYDirs;
+        foreach (Vector2Int dir in dirs) {
             Vector2Int newPosition = tileCellPosition + dir;
             if (newPosition.x >= -18 && newPosition.x <= 23 
                 && newPosition.y >= -10 && newPosition.y <= 12)
-                positions.Add(newPosition);
+                Neighbours.Add(newPosition);
         }
-        return positions;
+        return Neighbours;
     }
 }

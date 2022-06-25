@@ -53,15 +53,9 @@ public class UnitMovement : MonoBehaviour
         if (selectedObject == null) return;
         Vector3Int targetPosition = _tilemap.WorldToCell(mouseInput),
                 currentPosition = _tilemap.WorldToCell(originalPosition);
-        int distance = Mathf.Abs(targetPosition.x - currentPosition.x) + Mathf.Abs(targetPosition.y - currentPosition.y);
-        if (selectedUnit._unitType == "Tank") {
-            Tank tank = (Tank)selectedUnit;
-            if (tank._maximumMovement < distance) {
-                deselect();
-            } else {
-                lastClickedPos = _tilemap.GetCellCenterWorld(targetPosition);
-            }
-        }
+        if (movableRange.Contains((Vector2Int)targetPosition)) {
+            lastClickedPos = _tilemap.GetCellCenterWorld(targetPosition);
+        } else deselect();
     }
 
     private void deselect() {
