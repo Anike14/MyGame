@@ -36,6 +36,7 @@ public class UnitMovement : MonoBehaviour
     public void HandleSelection(GameObject selection) {
         if (this.selectedObject != null)
             this.selectedObject.transform.position = originalPosition;
+        else deselect();
         this.selectedObject = selection;
         lastClickedPos = _tilemap.GetCellCenterWorld(_tilemap.WorldToCell(selectedObject.transform.position));
         selectedUnit = selectedObject.transform.GetChild(0).GetComponent<UnitBase>();
