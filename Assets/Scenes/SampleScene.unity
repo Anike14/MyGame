@@ -3327,7 +3327,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  mapManager: {fileID: 844975362}
+  mapManager_land: {fileID: 0}
   movementRangeHighlight: {fileID: 391958114}
 --- !u!114 &391958114
 MonoBehaviour:
@@ -3494,33 +3494,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 844975363}
-  - component: {fileID: 844975362}
+  - component: {fileID: 844975364}
   m_Layer: 0
-  m_Name: MapManager
+  m_Name: MapManager_Land
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &844975362
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 844975361}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 13035bea0ce98e746b28531caa7fa399, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _landTilemap: {fileID: 1628857220}
-  _grassTilemap: {fileID: 2066531840}
-  _forestTilemap: {fileID: 33843034}
-  _rocksTilemap: {fileID: 369332864}
-  _mountainTilemap: {fileID: 2040603946}
-  _waterTilemap: {fileID: 873048844}
-  _seaTilemap: {fileID: 204669985}
 --- !u!4 &844975363
 Transform:
   m_ObjectHideFlags: 0
@@ -3536,6 +3517,28 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &844975364
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 844975361}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68ac849bfe5a17b43a916b80bdb09461, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _landTilemap: {fileID: 1628857220}
+  _grassTilemap: {fileID: 2066531840}
+  _forestTilemap: {fileID: 33843034}
+  _rocksTilemap: {fileID: 369332864}
+  _mountainTilemap: {fileID: 2040603946}
+  _waterTilemap: {fileID: 873048844}
+  _seaTilemap: {fileID: 204669985}
+  _layerMask:
+    serializedVersion: 2
+    m_Bits: 128
 --- !u!1 &873048841
 GameObject:
   m_ObjectHideFlags: 0
@@ -4437,7 +4440,7 @@ MonoBehaviour:
   _currentCamera: {fileID: 519420031}
   _layerMask:
     serializedVersion: 2
-    m_Bits: 128
+    m_Bits: 448
   OnHandleUpdate:
     m_PersistentCalls:
       m_Calls:

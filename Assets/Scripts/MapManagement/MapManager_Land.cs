@@ -4,12 +4,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-// Only For Land Unit!!!
-public class MapManager : MonoBehaviour
+public class MapManager_Land : MonoBehaviour
 {
     [SerializeField]
     private Tilemap _landTilemap, _grassTilemap, 
         _forestTilemap, _rocksTilemap, _mountainTilemap, _waterTilemap, _seaTilemap;
+    [SerializeField]
+	private LayerMask _layerMask;
+
+    private static Tilemap _tilemap;
+	private static LayerMask _targetLayerMask;
 
     private List<Vector2Int> landTiles, grassTiles, 
         forestTiles, rocksTiles, mountainTiles, waterTiles, seaTiles;
@@ -33,16 +37,19 @@ public class MapManager : MonoBehaviour
             new Vector2Int(-1,-1)
         };
 
-    // void Awake()
-    // {
-    //     landTiles = GetTilemapCellPositionsFrom(_landTilemap);
-    //     grassTiles = GetTilemapCellPositionsFrom(_grassTilemap);
-    //     forestTiles = GetTilemapCellPositionsFrom(_forestTilemap);
-    //     rocksTiles = GetTilemapCellPositionsFrom(_rocksTilemap);
-    //     mountainTiles = GetTilemapCellPositionsFrom(_mountainTilemap);
-    //     waterTiles = GetTilemapCellPositionsFrom(_waterTilemap);
-    //     seaTiles = GetTilemapCellPositionsFrom(_seaTilemap);
-    // }
+    void Awake()
+    {
+        _tilemap = this._landTilemap;
+        _targetLayerMask = this._layerMask;
+
+        // landTiles = GetTilemapCellPositionsFrom(_landTilemap);
+        // grassTiles = GetTilemapCellPositionsFrom(_grassTilemap);
+        // forestTiles = GetTilemapCellPositionsFrom(_forestTilemap);
+        // rocksTiles = GetTilemapCellPositionsFrom(_rocksTilemap);
+        // mountainTiles = GetTilemapCellPositionsFrom(_mountainTilemap);
+        // waterTiles = GetTilemapCellPositionsFrom(_waterTilemap);
+        // seaTiles = GetTilemapCellPositionsFrom(_seaTilemap);
+    }
 
     // public bool isMovable(Vector2 tilePosition) {
     //     Vector2Int tilePosition = Vector2Int.FloorToInt(tilePosition);
@@ -64,7 +71,7 @@ public class MapManager : MonoBehaviour
     // }
 
     public List<Vector2Int> GetMovementRange(Vector3Int currentPosition, int maximumMovement, float stepConsumption, float currentActionPoints) {
-        return MapManager.BFS((Vector2Int)currentPosition, maximumMovement, stepConsumption, currentActionPoints);
+        return MapManager_Land.BFS((Vector2Int)currentPosition, maximumMovement, stepConsumption, currentActionPoints);
     }
 
     public static List<Vector2Int> BFS(Vector2Int startCell, int maximumMovement, 
@@ -81,6 +88,9 @@ public class MapManager : MonoBehaviour
             Queue<Vector2Int> tilesToBeVisited_Next_Round = new Queue<Vector2Int>();
             while (tilesToBeVisited.Count > 0) {
                 Vector2Int currentTile = tilesToBeVisited.Dequeue();
+                if (startCell.x != currentTile.x && startCell.y != currentTile.y
+                    && Physics2D.OverlapPoint(
+                        _tilemap.GetCellCenterWorld((Vector3Int)currentTile), _targetLayerMask) != null) continue;
                 if (!visitedTiles.Contains(currentTile))
                     visitedTiles.Add(currentTile);
                 foreach (Vector2Int neighbourPosition in GetNeighboursFor(currentTile)) {

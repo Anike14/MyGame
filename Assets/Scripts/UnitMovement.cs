@@ -14,7 +14,7 @@ public class UnitMovement : MonoBehaviour
     [SerializeField]
     private UnityEvent OnSelectedObjectDeselect;
     [SerializeField]
-    private MapManager mapManager;
+    private MapManager_Land mapManager_land;
     [SerializeField]
     private MovementRangeHighlight movementRangeHighlight;
     
@@ -36,13 +36,12 @@ public class UnitMovement : MonoBehaviour
     public void HandleSelection(GameObject selection) {
         if (this.selectedObject != null)
             this.selectedObject.transform.position = originalPosition;
-        else deselect();
         this.selectedObject = selection;
         lastClickedPos = _tilemap.GetCellCenterWorld(_tilemap.WorldToCell(selectedObject.transform.position));
         selectedUnit = selectedObject.transform.GetChild(0).GetComponent<UnitBase>();
         if (selectedUnit._unitType == "Tank") {
             Tank tank = (Tank)selectedUnit;
-            movableRange = mapManager.GetMovementRange(
+            movableRange = mapManager_land.GetMovementRange(
                 _tilemap.WorldToCell(selectedObject.transform.position), 
                 tank._maximumMovement, tank._stepConsumption, 1000);
             movementRangeHighlight.PaintTileForMovable(movableRange);
