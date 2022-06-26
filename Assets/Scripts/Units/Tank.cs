@@ -6,9 +6,27 @@ public class Tank : UnitBase
 {
     [SerializeField]
 	public int _maximumMovement;
+	[SerializeField]
+	public int _landExtraCost;
+	[SerializeField]
+	public int _waterExtraCost;
+	[SerializeField]
+	public int _grassExtraCost;
+	[SerializeField]
+	public int _forestExtraCost;
+	[SerializeField]
+	public int _rockExtraCost;
 
 	[SerializeField]
-	public float _stepConsumption;
+	public float _landStepConsumption;
+	[SerializeField]
+	public float _waterStepConsumption;
+	[SerializeField]
+	public float _grassStepConsumption;
+	[SerializeField]
+	public float _forestStepConsumption;
+	[SerializeField]
+	public float _rockStepConsumption;
 
 	[SerializeField]
 	public float _armor;

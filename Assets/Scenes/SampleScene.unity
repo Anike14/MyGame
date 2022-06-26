@@ -1864,7 +1864,7 @@ GameObject:
   - component: {fileID: 204669983}
   - component: {fileID: 204669985}
   - component: {fileID: 204669984}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Sea
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4561,7 +4561,7 @@ GameObject:
   - component: {fileID: 1628857218}
   - component: {fileID: 1628857220}
   - component: {fileID: 1628857219}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: Land
   m_TagString: Untagged
   m_Icon: {fileID: 0}

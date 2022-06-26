@@ -47,9 +47,8 @@ public class UnitMovement : MonoBehaviour
         selectedUnit = selectedObject.transform.GetChild(0).GetComponent<UnitBase>();
         if (selectedUnit._unitType == Constants._unitType_Tank) {
             Tank tank = (Tank)selectedUnit;
-            movableRange = mapManager_land.GetMovementRange(
-                _tilemap.WorldToCell(selectedObject.transform.position), 
-                tank._maximumMovement, tank._stepConsumption, 1000);
+            movableRange = mapManager_land.GetMovementRange(tank,
+                _tilemap.WorldToCell(selectedObject.transform.position), 8f);
             movementRangeHighlight.PaintTileForMovable(movableRange);
             originalPosition = selectedObject.transform.position;
         }

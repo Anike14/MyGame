@@ -50,8 +50,100 @@ public class MapManager_Land : MonoBehaviour
         waterTiles = GetTilemapCellPositionsFrom(_waterTilemap);
         seaTiles = GetTilemapCellPositionsFrom(_seaTilemap);
     }
-    public static bool isTerrainMovable(Vector2Int tilePosition) {
-        return !mountainTiles.Contains(tilePosition) && !seaTiles.Contains(tilePosition);
+
+    private static bool isFirable(Tank tank, List<Vector2Int> tilePosition, Dictionary<Vector2Int, int> stepDictionary) {
+        // not implemented yet.
+        return true;
+    }
+
+    private static bool isTerrainMovable(Tank tank, List<Vector2Int> tilePosition, float currentActionPoints, 
+        Dictionary<Vector2Int, int> stepDictionary, Dictionary<Vector2Int, float> consumptionDictionary) {
+        if (mountainTiles.Contains(tilePosition[0]) || seaTiles.Contains(tilePosition[0]) 
+                || !stepDictionary.ContainsKey(tilePosition[1])) return false;
+        int maximumMovable = tank._maximumMovement;
+        Debug.Log(currentActionPoints);
+        if (rocksTiles.Contains(tilePosition[0])) {
+            if (stepDictionary.ContainsKey(tilePosition[0])) {
+                if (stepDictionary[tilePosition[1]] + tank._rockExtraCost + 1 <= maximumMovable
+                 && stepDictionary[tilePosition[0]] > stepDictionary[tilePosition[1]] + tank._rockExtraCost + 1
+                 && consumptionDictionary[tilePosition[1]] + tank._rockStepConsumption < currentActionPoints
+                 && consumptionDictionary[tilePosition[0]] > consumptionDictionary[tilePosition[1]] + tank._rockStepConsumption) {
+                    stepDictionary[tilePosition[0]] = stepDictionary[tilePosition[1]] + tank._rockExtraCost + 1;
+                    consumptionDictionary[tilePosition[0]] = consumptionDictionary[tilePosition[1]] + tank._rockStepConsumption;
+                } else return false;
+            } else {
+                if (stepDictionary[tilePosition[1]] + tank._rockExtraCost + 1 <= maximumMovable
+                 && consumptionDictionary[tilePosition[1]] + tank._rockStepConsumption < currentActionPoints){
+                    stepDictionary.Add(tilePosition[0], stepDictionary[tilePosition[1]] + tank._rockExtraCost + 1);
+                    consumptionDictionary.Add(tilePosition[0], consumptionDictionary[tilePosition[1]] + tank._rockStepConsumption);
+                } else return false;
+            }
+        } else if (forestTiles.Contains(tilePosition[0])) {
+            if (stepDictionary.ContainsKey(tilePosition[0])) {
+                if (stepDictionary[tilePosition[1]] + tank._forestExtraCost + 1 <= maximumMovable
+                 && stepDictionary[tilePosition[0]] > stepDictionary[tilePosition[1]] + tank._forestExtraCost + 1
+                 && consumptionDictionary[tilePosition[1]] + tank._forestStepConsumption < currentActionPoints
+                 && consumptionDictionary[tilePosition[0]] > consumptionDictionary[tilePosition[1]] + tank._forestStepConsumption) {
+                    stepDictionary[tilePosition[0]] = stepDictionary[tilePosition[1]] + tank._forestExtraCost + 1;
+                    consumptionDictionary[tilePosition[0]] = consumptionDictionary[tilePosition[1]] + tank._forestStepConsumption;
+                } else return false;
+            } else {
+                if (stepDictionary[tilePosition[1]] + tank._forestExtraCost + 1 <= maximumMovable
+                 && consumptionDictionary[tilePosition[1]] + tank._forestStepConsumption < currentActionPoints){
+                    stepDictionary.Add(tilePosition[0], stepDictionary[tilePosition[1]] + tank._forestExtraCost + 1);
+                    consumptionDictionary.Add(tilePosition[0], consumptionDictionary[tilePosition[1]] + tank._forestStepConsumption);
+                } else return false;
+            }
+        } else if (grassTiles.Contains(tilePosition[0])) {
+            if (stepDictionary.ContainsKey(tilePosition[0])) {
+                if (stepDictionary[tilePosition[1]] + tank._grassExtraCost + 1 <= maximumMovable
+                 && stepDictionary[tilePosition[0]] > stepDictionary[tilePosition[1]] + tank._grassExtraCost + 1
+                 && consumptionDictionary[tilePosition[1]] + tank._grassStepConsumption < currentActionPoints
+                 && consumptionDictionary[tilePosition[0]] > consumptionDictionary[tilePosition[1]] + tank._grassStepConsumption) {
+                    stepDictionary[tilePosition[0]] = stepDictionary[tilePosition[1]] + tank._grassExtraCost + 1;
+                    consumptionDictionary[tilePosition[0]] = consumptionDictionary[tilePosition[1]] + tank._grassStepConsumption;
+                } else return false;
+            } else {
+                if (stepDictionary[tilePosition[1]] + tank._grassExtraCost + 1 <= maximumMovable
+                 && consumptionDictionary[tilePosition[1]] + tank._grassExtraCost < currentActionPoints){
+                    stepDictionary.Add(tilePosition[0], stepDictionary[tilePosition[1]] + tank._grassExtraCost + 1);
+                    consumptionDictionary.Add(tilePosition[0], consumptionDictionary[tilePosition[1]] + tank._grassStepConsumption);
+                } else return false;
+            }
+        } else if (waterTiles.Contains(tilePosition[0])) {
+            if (stepDictionary.ContainsKey(tilePosition[0])) {
+                if (stepDictionary[tilePosition[1]] + tank._waterExtraCost + 1 <= maximumMovable
+                 && stepDictionary[tilePosition[0]] > stepDictionary[tilePosition[1]] + tank._waterExtraCost + 1
+                 && consumptionDictionary[tilePosition[1]] + tank._waterStepConsumption < currentActionPoints
+                 && consumptionDictionary[tilePosition[0]] > consumptionDictionary[tilePosition[1]] + tank._waterStepConsumption) {
+                    stepDictionary[tilePosition[0]] = stepDictionary[tilePosition[1]] + tank._waterExtraCost + 1;
+                    consumptionDictionary[tilePosition[0]] = consumptionDictionary[tilePosition[1]] + tank._waterStepConsumption;
+                } else return false;
+            } else {
+                if (stepDictionary[tilePosition[1]] + tank._waterExtraCost + 1 <= maximumMovable
+                 && consumptionDictionary[tilePosition[1]] + tank._waterStepConsumption < currentActionPoints){
+                    stepDictionary.Add(tilePosition[0], stepDictionary[tilePosition[1]] + tank._waterExtraCost + 1);
+                    consumptionDictionary.Add(tilePosition[0], consumptionDictionary[tilePosition[1]] + tank._waterStepConsumption);
+                } else return false;
+            }
+        } else {
+            if (stepDictionary.ContainsKey(tilePosition[0])) {
+                if (stepDictionary[tilePosition[1]] + tank._landExtraCost + 1 <= maximumMovable
+                 && stepDictionary[tilePosition[0]] > stepDictionary[tilePosition[1]] + tank._landExtraCost + 1
+                 && consumptionDictionary[tilePosition[1]] + tank._landStepConsumption < currentActionPoints
+                 && consumptionDictionary[tilePosition[0]] > consumptionDictionary[tilePosition[1]] + tank._landStepConsumption) {
+                    stepDictionary[tilePosition[0]] = stepDictionary[tilePosition[1]] + tank._landExtraCost + 1;
+                    consumptionDictionary[tilePosition[0]] = consumptionDictionary[tilePosition[1]] + tank._landStepConsumption;
+                } else return false;
+            } else {
+                if (stepDictionary[tilePosition[1]] + tank._landExtraCost + 1 <= maximumMovable
+                 && consumptionDictionary[tilePosition[1]] + tank._landStepConsumption < currentActionPoints){
+                    stepDictionary.Add(tilePosition[0], stepDictionary[tilePosition[1]] + tank._landExtraCost + 1);
+                    consumptionDictionary.Add(tilePosition[0], consumptionDictionary[tilePosition[1]] + tank._landStepConsumption);
+                } else return false;
+            }
+        }
+        return true;
     }
 
     public List<Vector2Int> GetTilemapCellPositionsFrom(Tilemap currentMap) {
@@ -63,40 +155,44 @@ public class MapManager_Land : MonoBehaviour
         return res;
     }
 
-    public List<List<Vector2Int>> GetMovementRange(Vector3Int currentPosition, int maximumMovement, float stepConsumption, float currentActionPoints) {
-        return MapManager_Land.BFS((Vector2Int)currentPosition, maximumMovement, stepConsumption, currentActionPoints);
+    
+    public List<List<Vector2Int>> GetFirePowerRange(Tank tank, Vector3Int currentPosition) {
+        return MapManager_Land.BFS(tank, (Vector2Int)currentPosition, -1f);
     }
 
-    public static List<List<Vector2Int>> BFS(Vector2Int startCell, int maximumMovement, 
-        float stepConsumption, float currentActionPoints) // used for Action Points calculation 
-    {
+    public List<List<Vector2Int>> GetMovementRange(Tank tank, Vector3Int currentPosition, float currentActionPoints) {
+        return MapManager_Land.BFS(tank, (Vector2Int)currentPosition, currentActionPoints);
+    }
+
+    public static List<List<Vector2Int>> BFS(Tank tank, Vector2Int startCell, float currentActionPoints) {
         Queue<List<Vector2Int>> tilesToBeVisited = new Queue<List<Vector2Int>>();
+        Dictionary<Vector2Int, int> stepDictionary = new Dictionary<Vector2Int, int>();
+        Dictionary<Vector2Int, float> consumptionDictionary = new Dictionary<Vector2Int, float>();
         List<List<Vector2Int>> visitedTiles = new List<List<Vector2Int>>();
         List<Vector2Int> startNode = new List<Vector2Int>{startCell, startCell};
 
         tilesToBeVisited.Enqueue(startNode);
+        stepDictionary.Add(startNode[0], 0);
+        consumptionDictionary.Add(startNode[0], 0);
         visitedTiles.Add(startNode);
 
-        int steps = 0;
         while (tilesToBeVisited.Count > 0) {
-            Queue<List<Vector2Int>> tilesToBeVisited_Next_Round = new Queue<List<Vector2Int>>();
-            while (tilesToBeVisited.Count > 0) {
-                List<Vector2Int> currentTile = tilesToBeVisited.Dequeue();
-                if (startNode[0] != startCell
-                    && Physics2D.OverlapPoint(
-                        _tilemap.GetCellCenterWorld((Vector3Int)currentTile[0]), _targetLayerMask) != null) continue;
-                if (!visitedTiles.Contains(currentTile)) visitedTiles.Add(currentTile);
-                foreach (List<Vector2Int> neighbourPosition in GetNeighboursFor(currentTile[0])) {
-                    if (!visitedTiles.Contains(neighbourPosition)
-                        && !tilesToBeVisited.Contains(neighbourPosition)
-                        && !tilesToBeVisited_Next_Round.Contains(neighbourPosition)
-                        && isTerrainMovable(neighbourPosition[0])) {
-                        tilesToBeVisited_Next_Round.Enqueue(neighbourPosition);
+            List<Vector2Int> currentTile = tilesToBeVisited.Dequeue();
+            if (startNode[0] != startCell
+                && Physics2D.OverlapPoint(
+                    _tilemap.GetCellCenterWorld((Vector3Int)currentTile[0]), _targetLayerMask) != null) continue;
+            if (!visitedTiles.Contains(currentTile)) visitedTiles.Add(currentTile);
+            foreach (List<Vector2Int> neighbourPosition in GetNeighboursFor(currentTile[0])) {
+                if (!visitedTiles.Contains(neighbourPosition)) {
+                    if (currentActionPoints == -1f) {
+                        if (isFirable(tank, neighbourPosition, stepDictionary))
+                            tilesToBeVisited.Enqueue(neighbourPosition);
+                    } else {
+                        if (isTerrainMovable(tank, neighbourPosition, currentActionPoints, stepDictionary, consumptionDictionary))
+                            tilesToBeVisited.Enqueue(neighbourPosition);
                     }
                 }
             }
-            if (steps++ == maximumMovement) break;
-            if (tilesToBeVisited_Next_Round.Count > 0) tilesToBeVisited = tilesToBeVisited_Next_Round;
         }
         return visitedTiles;
     }
