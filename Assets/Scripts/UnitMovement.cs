@@ -24,18 +24,19 @@ public class UnitMovement : MonoBehaviour
 
     // moving related
     private List<List<Vector2Int>> movableRange;
-    private Stack<List<Vector2Int>> movingTowards =
-                new Stack<List<Vector2Int>>();
+    private Stack<List<Vector2Int>> movingTowards;
     private Vector3 originalPosition;
     private Vector3 movingPosition;
 
     public void HandleUpdate() {
         if (selectedObject != null && selectedObject.transform.position != movingPosition) {
             selectedObject.transform.position = Vector2.MoveTowards(selectedObject.transform.position, movingPosition, 10f * Time.deltaTime);
-        } else if (selectedObject != null && movingTowards != null && movingTowards.Count > 0 && selectedObject.transform.position == movingPosition) {
-            movingPosition = MapManager_Land._tilemap.GetCellCenterWorld((Vector3Int)movingTowards.Pop()[0]);
-            selectedObject.transform.position = Vector2.MoveTowards(selectedObject.transform.position, movingPosition, 10f * Time.deltaTime);
-        } else movingTowards.Clear();
+        } else if (selectedObject != null && movingTowards != null && selectedObject.transform.position == movingPosition) {
+            if (movingTowards.Count > 0) {
+                movingPosition = MapManager_Land._tilemap.GetCellCenterWorld((Vector3Int)movingTowards.Pop()[0]);
+                selectedObject.transform.position = Vector2.MoveTowards(selectedObject.transform.position, movingPosition, 10f * Time.deltaTime);
+            } else MovingDone();
+        }
     }
 
     public void HandleSelection(GameObject selection) {
@@ -56,7 +57,7 @@ public class UnitMovement : MonoBehaviour
 
 	public void HandleMovement(Vector3 mouseInput) {
         if (selectedObject == null) return;
-        movingTowards.Clear();
+        movingTowards = new Stack<List<Vector2Int>>();
         Vector2Int targetPosition = (Vector2Int)_tilemap.WorldToCell(mouseInput);
         List<Vector2Int> targetTowards = movableRange.Find(target => target[0] == targetPosition);
         if (targetTowards != null) {
@@ -66,15 +67,21 @@ public class UnitMovement : MonoBehaviour
                 targetTowards = movableRange.Find(target => target[0] == targetTowards[1]);
                 movingTowards.Push(targetTowards);
             }
-        } else deselect();
+        } else Deselect();
     }
 
-    private void deselect() {
+    private void Deselect() {
         selectedObject.transform.position = originalPosition;
         movementRangeHighlight.ClearMovable();
-        movingTowards.Clear();
+        movingTowards = null;
         selectedUnit = null;
         selectedObject = null;
         OnSelectedObjectDeselect?.Invoke();
+    }
+
+    private void MovingDone() {
+        originalPosition = selectedObject.transform.position;
+        // For now
+        Deselect();
     }
 }

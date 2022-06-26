@@ -15,7 +15,7 @@ public class MapManager_Land : MonoBehaviour
     public static Tilemap _tilemap;
 	public static LayerMask _targetLayerMask;
 
-    private List<Vector2Int> landTiles, grassTiles, 
+    private static List<Vector2Int> landTiles, grassTiles, 
         forestTiles, rocksTiles, mountainTiles, waterTiles, seaTiles;
 
     public readonly static List<Vector2Int> oddYDirs = 
@@ -42,33 +42,26 @@ public class MapManager_Land : MonoBehaviour
         _tilemap = this._landTilemap;
         _targetLayerMask = this._layerMask;
 
-        // landTiles = GetTilemapCellPositionsFrom(_landTilemap);
-        // grassTiles = GetTilemapCellPositionsFrom(_grassTilemap);
-        // forestTiles = GetTilemapCellPositionsFrom(_forestTilemap);
-        // rocksTiles = GetTilemapCellPositionsFrom(_rocksTilemap);
-        // mountainTiles = GetTilemapCellPositionsFrom(_mountainTilemap);
-        // waterTiles = GetTilemapCellPositionsFrom(_waterTilemap);
-        // seaTiles = GetTilemapCellPositionsFrom(_seaTilemap);
+        landTiles = GetTilemapCellPositionsFrom(_landTilemap);
+        grassTiles = GetTilemapCellPositionsFrom(_grassTilemap);
+        forestTiles = GetTilemapCellPositionsFrom(_forestTilemap);
+        rocksTiles = GetTilemapCellPositionsFrom(_rocksTilemap);
+        mountainTiles = GetTilemapCellPositionsFrom(_mountainTilemap);
+        waterTiles = GetTilemapCellPositionsFrom(_waterTilemap);
+        seaTiles = GetTilemapCellPositionsFrom(_seaTilemap);
+    }
+    public static bool isTerrainMovable(Vector2Int tilePosition) {
+        return !mountainTiles.Contains(tilePosition) && !seaTiles.Contains(tilePosition);
     }
 
-    // public bool isMovable(Vector2 tilePosition) {
-    //     Vector2Int tilePosition = Vector2Int.FloorToInt(tilePosition);
-    //     return landTiles.Contains(tilePosition) || grassTiles.Contains(tilePosition)
-    //         || forestTiles.Contains(tilePosition) || rocksTiles.Contains(tilePosition) || waterTiles.Contains(tilePosition);
-    // }
-
-    // public List<Vector2Int> GetTilemapCellPositionsFrom(tilemap tilemap) {
-    //     List<Vector2Int> res = new List<Vector2Int>();
-    //     foreach(Vector2Int cellPos in tilemap.cellBounds.allPositionWithin) {
-    //         if (tilemap.HasTile((Vector3Int)cellPos) == null) continue;
-    //         res.add((Vector2Int)GetCellPosition(cellPos));
-    //     }
-    //     return res;
-    // }
-
-    // public Vector3Int GetCellPosition(Vector2Int) {
-
-    // }
+    public List<Vector2Int> GetTilemapCellPositionsFrom(Tilemap currentMap) {
+        List<Vector2Int> res = new List<Vector2Int>();
+        foreach(Vector2Int cellPos in currentMap.cellBounds.allPositionsWithin) {
+            if (!currentMap.HasTile((Vector3Int)cellPos)) continue;
+            res.Add(cellPos);
+        }
+        return res;
+    }
 
     public List<List<Vector2Int>> GetMovementRange(Vector3Int currentPosition, int maximumMovement, float stepConsumption, float currentActionPoints) {
         return MapManager_Land.BFS((Vector2Int)currentPosition, maximumMovement, stepConsumption, currentActionPoints);
@@ -96,7 +89,8 @@ public class MapManager_Land : MonoBehaviour
                 foreach (List<Vector2Int> neighbourPosition in GetNeighboursFor(currentTile[0])) {
                     if (!visitedTiles.Contains(neighbourPosition)
                         && !tilesToBeVisited.Contains(neighbourPosition)
-                        && !tilesToBeVisited_Next_Round.Contains(neighbourPosition)) {
+                        && !tilesToBeVisited_Next_Round.Contains(neighbourPosition)
+                        && isTerrainMovable(neighbourPosition[0])) {
                         tilesToBeVisited_Next_Round.Enqueue(neighbourPosition);
                     }
                 }

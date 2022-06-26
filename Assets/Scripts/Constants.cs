@@ -4,5 +4,5 @@ using UnityEngine;
 
 public class Constants
 {
-    public static readonly _unitType_Tank = "Tank";
+    public static readonly string _unitType_Tank = "Tank";
 }
