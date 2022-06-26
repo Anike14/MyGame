@@ -101,14 +101,18 @@ MonoBehaviour:
   _maximumMovement: 4
   _landExtraCost: 0
   _waterExtraCost: 2
+  _seaExtraCost: 100000
   _grassExtraCost: 0
   _forestExtraCost: 3
   _rockExtraCost: 3
+  _mountainExtraCost: 6
   _landStepConsumption: 1.5
   _waterStepConsumption: 2
+  _seaStepConsumption: 100000
   _grassStepConsumption: 1.5
   _forestStepConsumption: 6
   _rockStepConsumption: 9
+  _mountainConsumption: 20
   _armor: 175
   _armorWeakness: 30
   _penetration: 180

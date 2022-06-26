@@ -58,10 +58,40 @@ public class MapManager_Land : MonoBehaviour
 
     private static bool isTerrainMovable(Tank tank, List<Vector2Int> tilePosition, float currentActionPoints, 
         Dictionary<Vector2Int, int> stepDictionary, Dictionary<Vector2Int, float> consumptionDictionary) {
-        if (mountainTiles.Contains(tilePosition[0]) || seaTiles.Contains(tilePosition[0]) 
-                || !stepDictionary.ContainsKey(tilePosition[1])) return false;
         int maximumMovable = tank._maximumMovement;
-        if (rocksTiles.Contains(tilePosition[0])) {
+        if (mountainTiles.Contains(tilePosition[0])) {
+            if (stepDictionary.ContainsKey(tilePosition[0])) {
+                if (stepDictionary[tilePosition[1]] + tank._mountainExtraCost + 1 <= maximumMovable
+                 && stepDictionary[tilePosition[0]] > stepDictionary[tilePosition[1]] + tank._mountainExtraCost + 1
+                 && consumptionDictionary[tilePosition[1]] + tank._mountainConsumption < currentActionPoints
+                 && consumptionDictionary[tilePosition[0]] > consumptionDictionary[tilePosition[1]] + tank._waterStepConsumption) {
+                    stepDictionary[tilePosition[0]] = stepDictionary[tilePosition[1]] + tank._mountainExtraCost + 1;
+                    consumptionDictionary[tilePosition[0]] = consumptionDictionary[tilePosition[1]] + tank._waterStepConsumption;
+                } else return false;
+            } else {
+                if (stepDictionary[tilePosition[1]] + tank._mountainExtraCost + 1 <= maximumMovable
+                 && consumptionDictionary[tilePosition[1]] + tank._mountainConsumption < currentActionPoints){
+                    stepDictionary.Add(tilePosition[0], stepDictionary[tilePosition[1]] + tank._mountainExtraCost + 1);
+                    consumptionDictionary.Add(tilePosition[0], consumptionDictionary[tilePosition[1]] + tank._mountainConsumption);
+                } else return false;
+            }
+        } else if (seaTiles.Contains(tilePosition[0])) {
+            if (stepDictionary.ContainsKey(tilePosition[0])) {
+                if (stepDictionary[tilePosition[1]] + tank._seaExtraCost + 1 <= maximumMovable
+                 && stepDictionary[tilePosition[0]] > stepDictionary[tilePosition[1]] + tank._seaExtraCost + 1
+                 && consumptionDictionary[tilePosition[1]] + tank._seaStepConsumption < currentActionPoints
+                 && consumptionDictionary[tilePosition[0]] > consumptionDictionary[tilePosition[1]] + tank._seaStepConsumption) {
+                    stepDictionary[tilePosition[0]] = stepDictionary[tilePosition[1]] + tank._seaExtraCost + 1;
+                    consumptionDictionary[tilePosition[0]] = consumptionDictionary[tilePosition[1]] + tank._seaStepConsumption;
+                } else return false;
+            } else {
+                if (stepDictionary[tilePosition[1]] + tank._seaExtraCost + 1 <= maximumMovable
+                 && consumptionDictionary[tilePosition[1]] + tank._seaStepConsumption < currentActionPoints){
+                    stepDictionary.Add(tilePosition[0], stepDictionary[tilePosition[1]] + tank._seaExtraCost + 1);
+                    consumptionDictionary.Add(tilePosition[0], consumptionDictionary[tilePosition[1]] + tank._seaStepConsumption);
+                } else return false;
+            }
+        } else if (rocksTiles.Contains(tilePosition[0])) {
             if (stepDictionary.ContainsKey(tilePosition[0])) {
                 if (stepDictionary[tilePosition[1]] + tank._rockExtraCost + 1 <= maximumMovable
                  && stepDictionary[tilePosition[0]] > stepDictionary[tilePosition[1]] + tank._rockExtraCost + 1

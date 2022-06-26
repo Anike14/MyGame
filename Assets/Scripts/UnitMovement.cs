@@ -52,7 +52,7 @@ public class UnitMovement : MonoBehaviour
         if (selectedUnit._unitType == Constants._unitType_Tank) {
             Tank tank = (Tank)selectedUnit;
             movableRange = mapManager_land.GetMovementRange(tank,
-                _tilemap.WorldToCell(selectedObject.transform.position), 8f);
+                _tilemap.WorldToCell(selectedObject.transform.position), 20f);
             movementRangeHighlight.PaintTileForMovable(movableRange);
             originalPosition = selectedObject.transform.position;
         }
