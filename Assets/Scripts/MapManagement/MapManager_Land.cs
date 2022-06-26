@@ -61,7 +61,6 @@ public class MapManager_Land : MonoBehaviour
         if (mountainTiles.Contains(tilePosition[0]) || seaTiles.Contains(tilePosition[0]) 
                 || !stepDictionary.ContainsKey(tilePosition[1])) return false;
         int maximumMovable = tank._maximumMovement;
-        Debug.Log(currentActionPoints);
         if (rocksTiles.Contains(tilePosition[0])) {
             if (stepDictionary.ContainsKey(tilePosition[0])) {
                 if (stepDictionary[tilePosition[1]] + tank._rockExtraCost + 1 <= maximumMovable

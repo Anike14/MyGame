@@ -30,11 +30,13 @@ public class UnitMovement : MonoBehaviour
 
     public void HandleUpdate() {
         if (selectedObject != null && selectedObject.transform.position != movingPosition) {
+            if (movingPosition.x > selectedObject.transform.position.x && selectedObject.transform.localScale.x > 0) flipUnit();
             selectedObject.transform.position = Vector2.MoveTowards(selectedObject.transform.position, movingPosition, 10f * Time.deltaTime);
         } else if (selectedObject != null && movingTowards != null && selectedObject.transform.position == movingPosition) {
             if (movingTowards.Count > 0) {
                 movingPosition = MapManager_Land._tilemap.GetCellCenterWorld((Vector3Int)movingTowards.Pop()[0]);
-                selectedObject.transform.position = Vector2.MoveTowards(selectedObject.transform.position, movingPosition, 10f * Time.deltaTime);
+            if (movingPosition.x < selectedObject.transform.position.x && selectedObject.transform.localScale.x < 0) flipUnit();
+            selectedObject.transform.position = Vector2.MoveTowards(selectedObject.transform.position, movingPosition, 10f * Time.deltaTime);
             } else MovingDone();
         }
     }
@@ -45,6 +47,8 @@ public class UnitMovement : MonoBehaviour
         this.selectedObject = selection;
         movingPosition = this.selectedObject.transform.position;
         selectedUnit = selectedObject.transform.GetChild(0).GetComponent<UnitBase>();
+
+        
         if (selectedUnit._unitType == Constants._unitType_Tank) {
             Tank tank = (Tank)selectedUnit;
             movableRange = mapManager_land.GetMovementRange(tank,
@@ -67,6 +71,15 @@ public class UnitMovement : MonoBehaviour
                 movingTowards.Push(targetTowards);
             }
         } else Deselect();
+    }
+
+    private void flipUnit() {
+        if (selectedObject != null) {
+            Vector3 newScale = 
+                selectedObject.transform.localScale;
+            newScale.x *= -1; 
+            selectedObject.transform.localScale = newScale;
+        }
     }
 
     private void Deselect() {
