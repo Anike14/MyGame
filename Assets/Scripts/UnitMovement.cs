@@ -23,23 +23,28 @@ public class UnitMovement : MonoBehaviour
     private UnitBase selectedUnit;
 
     // moving related
-    private List<Vector2Int> movableRange;
-    private Vector2 lastClickedPos;
+    private List<List<Vector2Int>> movableRange;
+    private Stack<List<Vector2Int>> movingTowards =
+                new Stack<List<Vector2Int>>();
     private Vector3 originalPosition;
+    private Vector3 movingPosition;
 
     public void HandleUpdate() {
-        if (selectedObject != null && (Vector2)selectedObject.transform.position != lastClickedPos) {
-            selectedObject.transform.position = Vector2.MoveTowards(selectedObject.transform.position, lastClickedPos, 10f * Time.deltaTime);
-        }
+        if (selectedObject != null && selectedObject.transform.position != movingPosition) {
+            selectedObject.transform.position = Vector2.MoveTowards(selectedObject.transform.position, movingPosition, 10f * Time.deltaTime);
+        } else if (selectedObject != null && movingTowards != null && movingTowards.Count > 0 && selectedObject.transform.position == movingPosition) {
+            movingPosition = MapManager_Land._tilemap.GetCellCenterWorld((Vector3Int)movingTowards.Pop()[0]);
+            selectedObject.transform.position = Vector2.MoveTowards(selectedObject.transform.position, movingPosition, 10f * Time.deltaTime);
+        } else movingTowards.Clear();
     }
 
     public void HandleSelection(GameObject selection) {
         if (this.selectedObject != null)
             this.selectedObject.transform.position = originalPosition;
         this.selectedObject = selection;
-        lastClickedPos = _tilemap.GetCellCenterWorld(_tilemap.WorldToCell(selectedObject.transform.position));
+        movingPosition = this.selectedObject.transform.position;
         selectedUnit = selectedObject.transform.GetChild(0).GetComponent<UnitBase>();
-        if (selectedUnit._unitType == "Tank") {
+        if (selectedUnit._unitType == Constants._unitType_Tank) {
             Tank tank = (Tank)selectedUnit;
             movableRange = mapManager_land.GetMovementRange(
                 _tilemap.WorldToCell(selectedObject.transform.position), 
@@ -51,16 +56,23 @@ public class UnitMovement : MonoBehaviour
 
 	public void HandleMovement(Vector3 mouseInput) {
         if (selectedObject == null) return;
-        Vector3Int targetPosition = _tilemap.WorldToCell(mouseInput),
-                currentPosition = _tilemap.WorldToCell(originalPosition);
-        if (movableRange.Contains((Vector2Int)targetPosition)) {
-            lastClickedPos = _tilemap.GetCellCenterWorld(targetPosition);
+        movingTowards.Clear();
+        Vector2Int targetPosition = (Vector2Int)_tilemap.WorldToCell(mouseInput);
+        List<Vector2Int> targetTowards = movableRange.Find(target => target[0] == targetPosition);
+        if (targetTowards != null) {
+            movingTowards.Push(targetTowards);
+            targetTowards = movableRange.Find(target => target[0] == targetPosition);
+            while (targetTowards[1] != (Vector2Int)MapManager_Land._tilemap.WorldToCell(originalPosition)) {
+                targetTowards = movableRange.Find(target => target[0] == targetTowards[1]);
+                movingTowards.Push(targetTowards);
+            }
         } else deselect();
     }
 
     private void deselect() {
         selectedObject.transform.position = originalPosition;
         movementRangeHighlight.ClearMovable();
+        movingTowards.Clear();
         selectedUnit = null;
         selectedObject = null;
         OnSelectedObjectDeselect?.Invoke();

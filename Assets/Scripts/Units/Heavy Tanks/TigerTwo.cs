@@ -5,7 +5,7 @@ using UnityEngine;
 public class TigerTwo : Tank
 {
     void start() {
-        _unitType = "Tank";
+        _unitType = Constants._unitType_Tank;
         _maximumMovement = 4;
         _stepConsumption = 1.5f;
         _armor = 175f;
@@ -13,5 +13,4 @@ public class TigerTwo : Tank
         _penetration = 180f;
         _stealth = new float[]{70,50,40,30,20,10};
     }
-		
 }

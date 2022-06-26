@@ -12,8 +12,8 @@ public class MapManager_Land : MonoBehaviour
     [SerializeField]
 	private LayerMask _layerMask;
 
-    private static Tilemap _tilemap;
-	private static LayerMask _targetLayerMask;
+    public static Tilemap _tilemap;
+	public static LayerMask _targetLayerMask;
 
     private List<Vector2Int> landTiles, grassTiles, 
         forestTiles, rocksTiles, mountainTiles, waterTiles, seaTiles;
@@ -70,30 +70,30 @@ public class MapManager_Land : MonoBehaviour
 
     // }
 
-    public List<Vector2Int> GetMovementRange(Vector3Int currentPosition, int maximumMovement, float stepConsumption, float currentActionPoints) {
+    public List<List<Vector2Int>> GetMovementRange(Vector3Int currentPosition, int maximumMovement, float stepConsumption, float currentActionPoints) {
         return MapManager_Land.BFS((Vector2Int)currentPosition, maximumMovement, stepConsumption, currentActionPoints);
     }
 
-    public static List<Vector2Int> BFS(Vector2Int startCell, int maximumMovement, 
+    public static List<List<Vector2Int>> BFS(Vector2Int startCell, int maximumMovement, 
         float stepConsumption, float currentActionPoints) // used for Action Points calculation 
     {
-        Queue<Vector2Int> tilesToBeVisited = new Queue<Vector2Int>();
-        List<Vector2Int> visitedTiles = new List<Vector2Int>();
+        Queue<List<Vector2Int>> tilesToBeVisited = new Queue<List<Vector2Int>>();
+        List<List<Vector2Int>> visitedTiles = new List<List<Vector2Int>>();
+        List<Vector2Int> startNode = new List<Vector2Int>{startCell, startCell};
 
-        tilesToBeVisited.Enqueue(startCell);
-        visitedTiles.Add(startCell);
+        tilesToBeVisited.Enqueue(startNode);
+        visitedTiles.Add(startNode);
 
-        int counter = 0;
+        int steps = 0;
         while (tilesToBeVisited.Count > 0) {
-            Queue<Vector2Int> tilesToBeVisited_Next_Round = new Queue<Vector2Int>();
+            Queue<List<Vector2Int>> tilesToBeVisited_Next_Round = new Queue<List<Vector2Int>>();
             while (tilesToBeVisited.Count > 0) {
-                Vector2Int currentTile = tilesToBeVisited.Dequeue();
-                if (startCell.x != currentTile.x && startCell.y != currentTile.y
+                List<Vector2Int> currentTile = tilesToBeVisited.Dequeue();
+                if (startNode[0] != startCell
                     && Physics2D.OverlapPoint(
-                        _tilemap.GetCellCenterWorld((Vector3Int)currentTile), _targetLayerMask) != null) continue;
-                if (!visitedTiles.Contains(currentTile))
-                    visitedTiles.Add(currentTile);
-                foreach (Vector2Int neighbourPosition in GetNeighboursFor(currentTile)) {
+                        _tilemap.GetCellCenterWorld((Vector3Int)currentTile[0]), _targetLayerMask) != null) continue;
+                if (!visitedTiles.Contains(currentTile)) visitedTiles.Add(currentTile);
+                foreach (List<Vector2Int> neighbourPosition in GetNeighboursFor(currentTile[0])) {
                     if (!visitedTiles.Contains(neighbourPosition)
                         && !tilesToBeVisited.Contains(neighbourPosition)
                         && !tilesToBeVisited_Next_Round.Contains(neighbourPosition)) {
@@ -101,22 +101,23 @@ public class MapManager_Land : MonoBehaviour
                     }
                 }
             }
-            if (counter++ == maximumMovement) break;
+            if (steps++ == maximumMovement) break;
             if (tilesToBeVisited_Next_Round.Count > 0) tilesToBeVisited = tilesToBeVisited_Next_Round;
         }
         return visitedTiles;
     }
 
-    public static List<Vector2Int> GetNeighboursFor(Vector2Int tileCellPosition)
+    public static List<List<Vector2Int>> GetNeighboursFor(Vector2Int tileCellPosition)
     {
-        List<Vector2Int> Neighbours = new List<Vector2Int>(),
-            dirs = tileCellPosition.y % 2 == 0 ? evenYDirs : oddYDirs;
+        List<List<Vector2Int>> neighbours = new List<List<Vector2Int>>();
+        List<Vector2Int> dirs = tileCellPosition.y % 2 == 0 ? evenYDirs : oddYDirs;
         foreach (Vector2Int dir in dirs) {
             Vector2Int newPosition = tileCellPosition + dir;
+            List<Vector2Int> thisTile = new List<Vector2Int>(){newPosition, tileCellPosition};
             if (newPosition.x >= -18 && newPosition.x <= 23 
                 && newPosition.y >= -10 && newPosition.y <= 12)
-                Neighbours.Add(newPosition);
+                neighbours.Add(thisTile);
         }
-        return Neighbours;
+        return neighbours;
     }
 }

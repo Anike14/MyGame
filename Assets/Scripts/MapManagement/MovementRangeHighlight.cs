@@ -15,11 +15,11 @@ public class MovementRangeHighlight : MonoBehaviour
         _movableRangeLayer.ClearAllTiles();
     }
 
-    public void PaintTileForMovable(IEnumerable<Vector2Int> tilePositions) {
+    public void PaintTileForMovable(IEnumerable<List<Vector2Int>> tilePositions) {
         this.ClearMovable();
-        foreach (Vector2Int tilePosition in tilePositions)
+        foreach (List<Vector2Int> tilePosition in tilePositions)
         {
-            _movableRangeLayer.SetTile((Vector3Int)tilePosition, _movableRangeTile);
+            _movableRangeLayer.SetTile((Vector3Int)tilePosition[0], _movableRangeTile);
         }
     }
 }
