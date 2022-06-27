@@ -185,11 +185,11 @@ public class MapManager_Land : MonoBehaviour
     }
 
     
-    public List<List<Vector2Int>> GetFirePowerRange(Tank tank, Vector3Int currentPosition) {
+    public static List<List<Vector2Int>> GetFirePowerRange(Tank tank, Vector3Int currentPosition) {
         return MapManager_Land.BFS(tank, (Vector2Int)currentPosition, -1f);
     }
 
-    public List<List<Vector2Int>> GetMovementRange(Tank tank, Vector3Int currentPosition, float currentActionPoints) {
+    public static List<List<Vector2Int>> GetMovementRange(Tank tank, Vector3Int currentPosition, float currentActionPoints) {
         return MapManager_Land.BFS(tank, (Vector2Int)currentPosition, currentActionPoints);
     }
 

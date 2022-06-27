@@ -10,11 +10,7 @@ using UnityEngine.Events;
 public class UnitMovement : MonoBehaviour
 {
     [SerializeField]
-    public Tilemap _tilemap;
-    [SerializeField]
     private UnityEvent OnSelectedObjectDeselect;
-    [SerializeField]
-    private MapManager_Land mapManager_land;
     [SerializeField]
     private MovementRangeHighlight movementRangeHighlight;
     
@@ -42,18 +38,21 @@ public class UnitMovement : MonoBehaviour
     }
 
     public void HandleSelection(GameObject selection) {
+        if (selection == null) { Deselect(); return; }
         if (this.selectedObject != null)
             this.selectedObject.transform.position = originalPosition;
+
         this.selectedObject = selection;
         movingPosition = this.selectedObject.transform.position;
         selectedUnit = selectedObject.transform.GetChild(0).GetComponent<UnitBase>();
-
         
         if (selectedUnit._unitType == Constants._unitType_Tank) {
             Tank tank = (Tank)selectedUnit;
-            movableRange = mapManager_land.GetMovementRange(tank,
-                _tilemap.WorldToCell(selectedObject.transform.position), 20f);
-            movementRangeHighlight.PaintTileForMovable(movableRange);
+            if (tank.isMovable()) {
+                movableRange = MapManager_Land.GetMovementRange(tank,
+                    MapManager_Land._tilemap.WorldToCell(selectedObject.transform.position), 20f);
+                movementRangeHighlight.PaintTileForMovable(movableRange);
+            }
             originalPosition = selectedObject.transform.position;
         }
 	}
@@ -61,7 +60,7 @@ public class UnitMovement : MonoBehaviour
 	public void HandleMovement(Vector3 mouseInput) {
         if (selectedObject == null) return;
         movingTowards = new Stack<List<Vector2Int>>();
-        Vector2Int targetPosition = (Vector2Int)_tilemap.WorldToCell(mouseInput);
+        Vector2Int targetPosition = (Vector2Int)MapManager_Land._tilemap.WorldToCell(mouseInput);
         List<Vector2Int> targetTowards = movableRange.Find(target => target[0] == targetPosition);
         if (targetTowards != null) {
             movingTowards.Push(targetTowards);
@@ -83,7 +82,8 @@ public class UnitMovement : MonoBehaviour
     }
 
     private void Deselect() {
-        selectedObject.transform.position = originalPosition;
+        if (selectedObject != null)
+            selectedObject.transform.position = originalPosition;
         movementRangeHighlight.ClearMovable();
         movingTowards = null;
         selectedUnit = null;
@@ -93,6 +93,7 @@ public class UnitMovement : MonoBehaviour
 
     private void MovingDone() {
         originalPosition = selectedObject.transform.position;
+        selectedUnit.deactivateMovable();
         // For now
         Deselect();
     }

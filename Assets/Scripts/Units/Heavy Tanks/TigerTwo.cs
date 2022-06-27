@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class TigerTwo : Tank
 {
-    void start() {
+    void Start(){
         _unitType = Constants._unitType_Tank;
 
         _maximumMovement = 4;

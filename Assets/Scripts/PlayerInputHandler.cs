@@ -57,7 +57,12 @@ public class PlayerInputHandler : MonoBehaviour
             HandleSelection();
             return;
         }
-        OnHandleMovement?.Invoke(mouseInput);
+        
+        UnitBase selectedUnit = selectedObject.transform.GetChild(0).GetComponent<UnitBase>();
+        if (selectedUnit != null) {
+            if (selectedUnit.isMovable()) 
+                OnHandleMovement?.Invoke(mouseInput);
+        }
 	}
 
     public void handleDeselect() {
