@@ -10,7 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 5776981260230570145}
   - component: {fileID: 3270100401933862788}
-  - component: {fileID: 9183201931295708983}
+  - component: {fileID: 3801918134200217751}
+  - component: {fileID: 8843952220045482023}
   m_Layer: 0
   m_Name: Tiger-II
   m_TagString: Untagged
@@ -85,7 +86,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &9183201931295708983
+--- !u!114 &3801918134200217751
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -97,24 +98,54 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 893e69215da574c40999fb8b0781182a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnDeactivateMovable:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 8843952220045482023}
+        m_TargetAssemblyTypeName: MovingDoneFeedBack, Assembly-CSharp
+        m_MethodName: PlayFeedback
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnActivateMovable:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 8843952220045482023}
+        m_TargetAssemblyTypeName: MovingDoneFeedBack, Assembly-CSharp
+        m_MethodName: StopFeedback
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   _unitType: Tank
   _maximumMovement: 4
   _landExtraCost: 0
   _waterExtraCost: 2
-  _seaExtraCost: 100000
+  _seaExtraCost: 10000
   _grassExtraCost: 0
   _forestExtraCost: 3
-  _rockExtraCost: 3
+  _rockExtraCost: 1
   _mountainExtraCost: 6
   _landStepConsumption: 1.5
   _waterStepConsumption: 2
-  _seaStepConsumption: 100000
+  _seaStepConsumption: 10000
   _grassStepConsumption: 1.5
   _forestStepConsumption: 6
   _rockStepConsumption: 9
   _mountainConsumption: 20
   _armor: 175
-  _armorWeakness: 30
+  _armorWeakness: 10
   _penetration: 180
   _stealth:
   - 70
@@ -123,6 +154,20 @@ MonoBehaviour:
   - 30
   - 20
   - 10
+--- !u!114 &8843952220045482023
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 197826875461656137}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 69b3cac0a0be4c246bbdbe863234cbc7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spriteRenderer: {fileID: 3270100401933862788}
+  movingDoneColor: {r: 0.4971698, g: 0.49716982, b: 0.49716982, a: 1}
 --- !u!1 &3633781401086625690
 GameObject:
   m_ObjectHideFlags: 0

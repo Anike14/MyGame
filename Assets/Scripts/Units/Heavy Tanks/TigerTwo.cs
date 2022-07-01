@@ -25,7 +25,7 @@ public class TigerTwo : Tank
         _mountainConsumption = 20f;
 
         _armor = 175f;
-        _armorWeakness = 30f;
+        _armorWeakness = 10f;
 
         _penetration = 180f;
 
