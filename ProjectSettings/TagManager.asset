@@ -12,12 +12,12 @@ TagManager:
   - Water
   - UI
   - 
-  - Unit-Land
-  - Unit-Water
-  - Unit-Air
-  - 
-  - 
-  - 
+  - Player1-Land
+  - Player2-Land
+  - Player1-Water
+  - Player2-Water
+  - Player1-Air
+  - Player2-Air
   - 
   - 
   - 

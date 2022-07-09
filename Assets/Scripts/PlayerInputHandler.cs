@@ -9,11 +9,13 @@ public class PlayerInputHandler : MonoBehaviour
     [SerializeField]
 	public Camera _currentCamera;
     [SerializeField]
-	public LayerMask _layerMask;
+	public LayerMask _myLayerMask;
+    [SerializeField]
+	public LayerMask _enemyLayerMask;
     [SerializeField]
 	private UnityEvent OnHandleUpdate;
     [SerializeField]
-	private UnityEvent<GameObject> OnHandleSelection;
+	private UnityEvent<GameObject, LayerMask, LayerMask> OnHandleSelection;
     [SerializeField]
     private UnityEvent<Vector3> OnHandleMovement;
     
@@ -41,10 +43,10 @@ public class PlayerInputHandler : MonoBehaviour
     private void HandleSelection() {
 		Vector3 mouseInput = _currentCamera.ScreenToWorldPoint(Input.mousePosition);
 		mouseInput.z = 0f;
-		Collider2D collider = Physics2D.OverlapPoint(mouseInput, _layerMask);
+		Collider2D collider = Physics2D.OverlapPoint(mouseInput, _myLayerMask);
 		selectedObject = collider == null ? null : collider.gameObject;
         if (selectedObject != null) {
-            OnHandleSelection?.Invoke(selectedObject);
+            OnHandleSelection?.Invoke(selectedObject, _myLayerMask, _enemyLayerMask);
         }
 	}
 
@@ -52,7 +54,7 @@ public class PlayerInputHandler : MonoBehaviour
         Vector3 mouseInput = _currentCamera.ScreenToWorldPoint(Input.mousePosition);
 		mouseInput.z = 0f;
         
-		Collider2D collider = Physics2D.OverlapPoint(mouseInput, _layerMask);
+		Collider2D collider = Physics2D.OverlapPoint(mouseInput, _myLayerMask);
         if (collider != null) {
             HandleSelection();
             return;

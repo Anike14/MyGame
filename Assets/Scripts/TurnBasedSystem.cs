@@ -7,17 +7,19 @@ using UnityEngine.Events;
 public class TurnBasedSystem : MonoBehaviour
 {
     [SerializeField]
-    private UnityEvent OnBlockPlayerInput;
+    private UnityEvent OnEvenTurnEnd;
     [SerializeField]
-    private UnityEvent OnUnblockPlayerInput;
+    private UnityEvent OnOddTurnEnd;
+
+    private int currentTurn = 0;
 
     public void NextTurn() {
-        Debug.Log("waiting for your turn.....");
-        OnBlockPlayerInput?.Invoke();
+        if (currentTurn % 2 == 0)
+            OnEvenTurnEnd?.Invoke();
+        else OnOddTurnEnd?.Invoke();
         foreach(UnitBase unit in FindObjectsOfType<UnitBase>()) {
             unit.activateMovable();
         }
-        Debug.Log("Your turn!");
-        OnUnblockPlayerInput?.Invoke();
+        currentTurn++;
     }
 }

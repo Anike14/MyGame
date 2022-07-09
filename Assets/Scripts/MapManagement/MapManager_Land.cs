@@ -9,11 +9,8 @@ public class MapManager_Land : MonoBehaviour
     [SerializeField]
     private Tilemap _landTilemap, _grassTilemap, 
         _forestTilemap, _rocksTilemap, _mountainTilemap, _waterTilemap, _seaTilemap;
-    [SerializeField]
-	private LayerMask _layerMask;
 
     public static Tilemap _tilemap;
-	public static LayerMask _targetLayerMask;
 
     private static List<Vector2Int> landTiles, grassTiles, 
         forestTiles, rocksTiles, mountainTiles, waterTiles, seaTiles;
@@ -40,7 +37,6 @@ public class MapManager_Land : MonoBehaviour
     void Awake()
     {
         _tilemap = this._landTilemap;
-        _targetLayerMask = this._layerMask;
 
         landTiles = GetTilemapCellPositionsFrom(_landTilemap);
         grassTiles = GetTilemapCellPositionsFrom(_grassTilemap);
@@ -185,15 +181,15 @@ public class MapManager_Land : MonoBehaviour
     }
 
     
-    public static List<List<Vector2Int>> GetFirePowerRange(Tank tank, Vector3Int currentPosition) {
-        return MapManager_Land.BFS(tank, (Vector2Int)currentPosition, -1f);
+    public static List<List<Vector2Int>> GetFirePowerRange(Tank tank, Vector3Int currentPosition, LayerMask myLayerMask, LayerMask enemyLayerMask) {
+        return MapManager_Land.BFS(tank, (Vector2Int)currentPosition, -1f, myLayerMask, enemyLayerMask);
     }
 
-    public static List<List<Vector2Int>> GetMovementRange(Tank tank, Vector3Int currentPosition, float currentActionPoints) {
-        return MapManager_Land.BFS(tank, (Vector2Int)currentPosition, currentActionPoints);
+    public static List<List<Vector2Int>> GetMovementRange(Tank tank, Vector3Int currentPosition, float currentActionPoints, LayerMask myLayerMask, LayerMask enemyLayerMask) {
+        return MapManager_Land.BFS(tank, (Vector2Int)currentPosition, currentActionPoints, myLayerMask, enemyLayerMask);
     }
 
-    public static List<List<Vector2Int>> BFS(Tank tank, Vector2Int startCell, float currentActionPoints) {
+    public static List<List<Vector2Int>> BFS(Tank tank, Vector2Int startCell, float currentActionPoints, LayerMask myLayerMask, LayerMask enemyLayerMask) {
         Queue<List<Vector2Int>> tilesToBeVisited = new Queue<List<Vector2Int>>();
         Dictionary<Vector2Int, int> stepDictionary = new Dictionary<Vector2Int, int>();
         Dictionary<Vector2Int, float> consumptionDictionary = new Dictionary<Vector2Int, float>();
@@ -209,7 +205,10 @@ public class MapManager_Land : MonoBehaviour
             List<Vector2Int> currentTile = tilesToBeVisited.Dequeue();
             if (startNode[0] != startCell
                 && Physics2D.OverlapPoint(
-                    _tilemap.GetCellCenterWorld((Vector3Int)currentTile[0]), _targetLayerMask) != null) continue;
+                    _tilemap.GetCellCenterWorld((Vector3Int)currentTile[0]), myLayerMask) != null) continue;
+            if (currentActionPoints != -1f
+                && Physics2D.OverlapPoint(
+                    _tilemap.GetCellCenterWorld((Vector3Int)currentTile[0]), enemyLayerMask) != null) continue;
             if (!visitedTiles.Contains(currentTile)) visitedTiles.Add(currentTile);
             foreach (List<Vector2Int> neighbourPosition in GetNeighboursFor(currentTile[0])) {
                 if (!visitedTiles.Contains(neighbourPosition)) {

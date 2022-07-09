@@ -37,7 +37,7 @@ public class UnitMovement : MonoBehaviour
         }
     }
 
-    public void HandleSelection(GameObject selection) {
+    public void HandleSelection(GameObject selection, LayerMask myLayerMask, LayerMask enemyLayerMask) {
         if (selection == null) { Deselect(); return; }
         if (this.selectedObject != null)
             this.selectedObject.transform.position = originalPosition;
@@ -50,7 +50,7 @@ public class UnitMovement : MonoBehaviour
             Tank tank = (Tank)selectedUnit;
             if (tank.isMovable()) {
                 movableRange = MapManager_Land.GetMovementRange(tank,
-                    MapManager_Land._tilemap.WorldToCell(selectedObject.transform.position), 20f);
+                    MapManager_Land._tilemap.WorldToCell(selectedObject.transform.position), 20f, myLayerMask, enemyLayerMask);
                 movementRangeHighlight.PaintTileForMovable(movableRange);
             }
             originalPosition = selectedObject.transform.position;
