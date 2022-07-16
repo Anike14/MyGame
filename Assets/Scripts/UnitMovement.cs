@@ -76,6 +76,7 @@ public class UnitMovement : MonoBehaviour
 
 	public void HandleMovement(Vector3 mouseInput) {
         if (selectedObject == null) return;
+        if (!selectedUnit.IsMovable()) { Deselect(); return; }
         movingTowards = new Stack<List<Vector2Int>>();
         Vector2Int targetPosition = (Vector2Int)MapManager_Land._tilemap.WorldToCell(mouseInput);
         List<Vector2Int> targetTowards = movableRange.Find(target => target[0] == targetPosition);
@@ -113,7 +114,14 @@ public class UnitMovement : MonoBehaviour
     }
 
     public void Fire() {
-        
+        MovingDone();
+        firableRangeHighlight.ClearFirable();
+        if (selectedUnit._unitType == Constants._unitType_Tank) {
+            Tank tank = (Tank)selectedUnit;
+            Tank enemyTank = (Tank)selectedEnemyUnit;
+            tank.FireAt(enemyTank);
+        }
+        ActingDone();
     }
 
     private void FlipUnit() {

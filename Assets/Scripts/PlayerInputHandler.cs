@@ -47,11 +47,11 @@ public class PlayerInputHandler : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButtonDown(0)) {
+        if (Input.GetMouseButtonDown(0) 
+            && !EventSystem.current.IsPointerOverGameObject()) {
 			if (this.aimingMode || selectedObject == null)
                 HandleSelection();
-            else if (!EventSystem.current.IsPointerOverGameObject())
-                HandleMove();
+            else HandleMove();
         }
         OnHandleUpdate?.Invoke();
     }
@@ -82,8 +82,7 @@ public class PlayerInputHandler : MonoBehaviour
         
         UnitBase selectedUnit = selectedObject.transform.GetChild(0).GetComponent<UnitBase>();
         if (selectedUnit != null) {
-            if (selectedUnit.IsMovable()) 
-                OnHandleMovement?.Invoke(mouseInput);
+            OnHandleMovement?.Invoke(mouseInput);
         }
 	}
 

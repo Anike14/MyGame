@@ -17,6 +17,7 @@ public class ActionDoneFeedBack : MonoBehaviour
     }
 
     public void PlayFeedback() {
+        Debug.Log("playing feedback");
         spriteRenderer.color = actionDoneColor;
     }
 

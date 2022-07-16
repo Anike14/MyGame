@@ -49,4 +49,8 @@ public class Tank : UnitBase
 
 	[SerializeField]
 	public float[] _stealth = new float[6];
+
+	public void FireAt(Tank enemy) {
+
+	}
 }
