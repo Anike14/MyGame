@@ -56,7 +56,6 @@ public class PlayerInputHandler : MonoBehaviour
         OnHandleUpdate?.Invoke();
     }
 
-
     private void HandleSelection() {
 		Vector3 mouseInput = _currentCamera.ScreenToWorldPoint(Input.mousePosition);
 		mouseInput.z = 0f;

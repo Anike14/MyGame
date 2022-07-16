@@ -11,6 +11,9 @@ GameObject:
   - component: {fileID: 5776981260230570145}
   - component: {fileID: 3270100401933862788}
   - component: {fileID: 3801918134200217751}
+  - component: {fileID: 7441589664808966753}
+  - component: {fileID: 7429337752871188523}
+  - component: {fileID: 4796952664383431086}
   - component: {fileID: 2174606586277415014}
   m_Layer: 0
   m_Name: Tiger-II
@@ -129,6 +132,51 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   _unitType: Tank
+  OnFiring:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7441589664808966753}
+        m_TargetAssemblyTypeName: FiringAnimationFeedBack, Assembly-CSharp
+        m_MethodName: PlayFeedback
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnPenetrated:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7429337752871188523}
+        m_TargetAssemblyTypeName: GetPenetratedAnimationFeedBack, Assembly-CSharp
+        m_MethodName: PlayFeedback
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnScratched:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 4796952664383431086}
+        m_TargetAssemblyTypeName: GetScratchedAnimationFeedBack, Assembly-CSharp
+        m_MethodName: PlayFeedback
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   _fireRange: 6
   _maximumMovement: 4
   _landExtraCost: 0
@@ -161,6 +209,50 @@ MonoBehaviour:
   - 30
   - 20
   - 10
+--- !u!114 &7441589664808966753
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 197826875461656137}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 282bbcb6ad1046a45ae4a01e4a961300, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tankObject: {fileID: 3633781401086625690}
+--- !u!114 &7429337752871188523
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 197826875461656137}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 691c52219b349c44c8cefdcf0efa5ad4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tankObject: {fileID: 3801918134200217751}
+  spriteRenderer: {fileID: 3270100401933862788}
+  penetratedColor: {r: 0.6886792, g: 0.04223035, b: 0.04223035, a: 1}
+  destroyedColor: {r: 0.46226418, g: 0.0021804967, b: 0.0021804967, a: 1}
+--- !u!114 &4796952664383431086
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 197826875461656137}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: efd18547da9977145a4e807a9caf1c33, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tankObject: {fileID: 197826875461656137}
+  spriteRenderer: {fileID: 3270100401933862788}
+  scratchedColor: {r: 0.8773585, g: 0.5255874, b: 0.5255874, a: 1}
 --- !u!114 &2174606586277415014
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -173,8 +265,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 66535d41d5ab9dc42b3060bbae2469ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  me: {fileID: 3801918134200217751}
   spriteRenderer: {fileID: 3270100401933862788}
-  actionDoneColor: {r: 0.26415092, g: 0.26415092, b: 0.26415092, a: 0}
+  actionDoneColor: {r: 0.5566038, g: 0.5287736, b: 0.41745284, a: 1}
 --- !u!1 &3633781401086625690
 GameObject:
   m_ObjectHideFlags: 0

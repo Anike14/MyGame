@@ -99,12 +99,28 @@ public class UnitMovement : MonoBehaviour
         }
     }
 
+    public void HandleScouting() {
+        ActingDone();
+    }
+
+    public void HandleHolding() {
+        if (selectedUnit._unitType == Constants._unitType_Tank) {
+            Tank tank = (Tank)selectedUnit;
+        }
+        ActingDone();
+    }
+
+    public void HandleHiding() {
+        ActingDone();
+    }
+
     public void HandleEnemySelection(GameObject selection) {
         if (selection == null) { DeactivateAimingMode(); return; }
         Vector2Int targetPosition = (Vector2Int)MapManager_Land._tilemap.WorldToCell(selection.transform.position);
         if (firableRange.Find(target => target[0] == targetPosition) == null) { DeactivateAimingMode(); return; }
         this.selectedEnemyObject = selection;
         selectedEnemyUnit = selectedEnemyObject.transform.GetChild(0).GetComponent<UnitBase>();
+        if (selectedEnemyUnit.IsDestroyed()) return;
         if (selectedEnemyUnit._unitType == Constants._unitType_Tank) {
             Tank enemyTank = (Tank)selectedEnemyUnit;
             // show enemyTank on the sidebar
@@ -119,6 +135,13 @@ public class UnitMovement : MonoBehaviour
         if (selectedUnit._unitType == Constants._unitType_Tank) {
             Tank tank = (Tank)selectedUnit;
             Tank enemyTank = (Tank)selectedEnemyUnit;
+            Debug.Log("enemyTank.transform.position.x: " + enemyTank.transform.position.x);
+            Debug.Log("tank.transform.position.x: " + tank.transform.position.x);
+            Debug.Log("tank.transform.localScale.x: " + tank.transform.localScale.x);
+            if (enemyTank.transform.position.x > tank.transform.position.x
+                && selectedObject.transform.localScale.x > 0) FlipUnit();
+            else if (enemyTank.transform.position.x < tank.transform.position.x
+                && selectedObject.transform.localScale.x < 0) FlipUnit();
             tank.FireAt(enemyTank);
         }
         ActingDone();

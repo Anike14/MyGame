@@ -1,9 +1,15 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Tank : UnitBase
 {
+    [SerializeField]
+    private UnityEvent OnFiring;
+    [SerializeField]
+    private UnityEvent OnPenetrated;
+    [SerializeField]
+    private UnityEvent OnScratched;
+
     [SerializeField]
 	public int _fireRange;
     [SerializeField]
@@ -50,7 +56,70 @@ public class Tank : UnitBase
 	[SerializeField]
 	public float[] _stealth = new float[6];
 
-	public void FireAt(Tank enemy) {
+	private bool scoutPos = false;
 
+	private bool holdPos = false;
+
+	private bool hidePos = false;
+
+	public void ResetPos() {
+		scoutPos = false;
+		holdPos = false;
+		hidePos = false;
+	}
+
+	public void Scouting() {
+		scoutPos = true;
+		holdPos = false;
+		hidePos = false;
+	}
+
+	public void holding() {
+		scoutPos = false;
+		holdPos = true;
+		hidePos = false;
+	}
+
+	public void hiding() {
+		scoutPos = false;
+		holdPos = true;
+		hidePos = true;
+	}
+
+	public void FireAt(Tank enemy) {
+		// play fire feedback
+		this.fire();
+
+		int randomNum = Random.Range(1, 100);
+		bool penetrationResult = false;
+		for (int i = 2; i >= 0; i--) {
+			if (randomNum < enemy._armorWeakness[i]) {
+				penetrationResult = this._penetration > 
+					(holdPos ? enemy._armor[i] * 1.05 : enemy._armor[i]);
+				break;
+			}
+		}
+		
+		if (penetrationResult) {
+			// play enemy calculation feedback
+			Debug.Log("penetration!");
+			enemy.getPenetrated();
+		} else {
+			// play enemy calculation feedback
+			Debug.Log("scratch!!!");
+			enemy.getScratched();
+		}
+	}
+
+	private void fire() {
+		OnFiring?.Invoke();
+	}
+
+	private void getPenetrated() {
+		OnPenetrated?.Invoke();
+	}
+
+	private void getScratched() {
+		OnScratched?.Invoke();
 	}
 }

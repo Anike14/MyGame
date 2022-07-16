@@ -5,7 +5,11 @@ using UnityEngine;
 public class ActionDoneFeedBack : MonoBehaviour
 {
     [SerializeField]
+    private UnitBase me;
+
+    [SerializeField]
     private SpriteRenderer spriteRenderer;
+
     [SerializeField]
     private Color actionDoneColor;
     
@@ -17,11 +21,12 @@ public class ActionDoneFeedBack : MonoBehaviour
     }
 
     public void PlayFeedback() {
-        Debug.Log("playing feedback");
+        if (me.IsDestroyed()) return;
         spriteRenderer.color = actionDoneColor;
     }
 
     public void StopFeedback() {
+        if (me.IsDestroyed()) return;
         spriteRenderer.color = originalColor;
     }
 
