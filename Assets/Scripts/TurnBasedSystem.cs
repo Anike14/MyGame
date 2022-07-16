@@ -18,7 +18,7 @@ public class TurnBasedSystem : MonoBehaviour
             OnEvenTurnEnd?.Invoke();
         else OnOddTurnEnd?.Invoke();
         foreach(UnitBase unit in FindObjectsOfType<UnitBase>()) {
-            unit.activateMovable();
+            unit.ActivateMovable();
         }
         currentTurn++;
     }

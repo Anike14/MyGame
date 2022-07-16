@@ -24,8 +24,8 @@ public class TigerTwo : Tank
 	    _rockStepConsumption = 9f;
         _mountainConsumption = 20f;
 
-        _armor = 175f;
-        _armorWeakness = 10f;
+        _armor = new []{220f, 175f, 90f};
+        _armorWeakness = new []{50f, 45f, 5f};
 
         _penetration = 180f;
 

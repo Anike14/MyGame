@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5776981260230570145}
   - component: {fileID: 3270100401933862788}
   - component: {fileID: 3801918134200217751}
-  - component: {fileID: 8843952220045482023}
+  - component: {fileID: 2174606586277415014}
   m_Layer: 0
   m_Name: Tiger-II
   m_TagString: Untagged
@@ -98,26 +98,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 893e69215da574c40999fb8b0781182a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  OnDeactivateMovable:
+  OnActivateActable:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 8843952220045482023}
-        m_TargetAssemblyTypeName: MovingDoneFeedBack, Assembly-CSharp
-        m_MethodName: PlayFeedback
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  OnActivateMovable:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 8843952220045482023}
-        m_TargetAssemblyTypeName: MovingDoneFeedBack, Assembly-CSharp
+      - m_Target: {fileID: 2174606586277415014}
+        m_TargetAssemblyTypeName: ActionDoneFeedBack, Assembly-CSharp
         m_MethodName: StopFeedback
         m_Mode: 1
         m_Arguments:
@@ -128,7 +113,23 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  OnDeactivateActable:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2174606586277415014}
+        m_TargetAssemblyTypeName: ActionDoneFeedBack, Assembly-CSharp
+        m_MethodName: PlayFeedback
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   _unitType: Tank
+  _fireRange: 6
   _maximumMovement: 4
   _landExtraCost: 0
   _waterExtraCost: 2
@@ -144,9 +145,15 @@ MonoBehaviour:
   _forestStepConsumption: 6
   _rockStepConsumption: 9
   _mountainConsumption: 20
-  _armor: 175
-  _armorWeakness: 10
   _penetration: 180
+  _armor:
+  - 220
+  - 175
+  - 90
+  _armorWeakness:
+  - 50
+  - 45
+  - 5
   _stealth:
   - 70
   - 50
@@ -154,7 +161,7 @@ MonoBehaviour:
   - 30
   - 20
   - 10
---- !u!114 &8843952220045482023
+--- !u!114 &2174606586277415014
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -163,11 +170,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 197826875461656137}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 69b3cac0a0be4c246bbdbe863234cbc7, type: 3}
+  m_Script: {fileID: 11500000, guid: 66535d41d5ab9dc42b3060bbae2469ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   spriteRenderer: {fileID: 3270100401933862788}
-  movingDoneColor: {r: 0.4971698, g: 0.49716982, b: 0.49716982, a: 1}
+  actionDoneColor: {r: 0.26415092, g: 0.26415092, b: 0.26415092, a: 0}
 --- !u!1 &3633781401086625690
 GameObject:
   m_ObjectHideFlags: 0

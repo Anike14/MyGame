@@ -48,7 +48,17 @@ public class MapManager_Land : MonoBehaviour
     }
 
     private static bool isFirable(Tank tank, List<Vector2Int> tilePosition, Dictionary<Vector2Int, int> stepDictionary) {
-        // not implemented yet.
+        if (mountainTiles.Contains(tilePosition[0])) {
+            return false;
+        } else if (seaTiles.Contains(tilePosition[0])) {
+            return false;
+        } else if (stepDictionary[tilePosition[1]] + 1 > tank._fireRange) {
+            return false;
+        } else if (stepDictionary.ContainsKey(tilePosition[0])) {
+            return false;
+        }
+
+        stepDictionary.Add(tilePosition[0], stepDictionary[tilePosition[1]] + 1);
         return true;
     }
 
@@ -212,7 +222,7 @@ public class MapManager_Land : MonoBehaviour
             if (!visitedTiles.Contains(currentTile)) visitedTiles.Add(currentTile);
             foreach (List<Vector2Int> neighbourPosition in GetNeighboursFor(currentTile[0])) {
                 if (!visitedTiles.Contains(neighbourPosition)) {
-                    if (currentActionPoints == -1f) {
+                    if (currentActionPoints == -1f) { // in firing we don't consider the action points
                         if (isFirable(tank, neighbourPosition, stepDictionary))
                             tilesToBeVisited.Enqueue(neighbourPosition);
                     } else {

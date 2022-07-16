@@ -2,12 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MovingDoneFeedBack : MonoBehaviour
+public class ActionDoneFeedBack : MonoBehaviour
 {
     [SerializeField]
     private SpriteRenderer spriteRenderer;
     [SerializeField]
-    private Color movingDoneColor;
+    private Color actionDoneColor;
     
     private Color originalColor;
 
@@ -17,7 +17,7 @@ public class MovingDoneFeedBack : MonoBehaviour
     }
 
     public void PlayFeedback() {
-        spriteRenderer.color = movingDoneColor;
+        spriteRenderer.color = actionDoneColor;
     }
 
     public void StopFeedback() {
