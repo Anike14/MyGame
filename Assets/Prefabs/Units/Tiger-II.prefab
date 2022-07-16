@@ -116,6 +116,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 3801918134200217751}
+        m_TargetAssemblyTypeName: Tank, Assembly-CSharp
+        m_MethodName: ResetPos
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   OnDeactivateActable:
     m_PersistentCalls:
       m_Calls:
@@ -194,6 +206,7 @@ MonoBehaviour:
   _rockStepConsumption: 9
   _mountainConsumption: 20
   _penetration: 180
+  _gunStability: 0.02
   _armor:
   - 220
   - 175

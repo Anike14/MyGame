@@ -48,6 +48,9 @@ public class Tank : UnitBase
 	public float _penetration;
 
 	[SerializeField]
+	public float _gunStability;
+
+	[SerializeField]
 	public float[] _armor;
 
 	[SerializeField]
@@ -63,6 +66,7 @@ public class Tank : UnitBase
 	private bool hidePos = false;
 
 	public void ResetPos() {
+		if (this.IsDestroyed()) return;
 		scoutPos = false;
 		holdPos = false;
 		hidePos = false;
@@ -91,10 +95,11 @@ public class Tank : UnitBase
 		this.fire();
 
 		int randomNum = Random.Range(1, 100);
+		float randomPenetrationRatio = 1 + Random.Range(-_gunStability, _gunStability);
 		bool penetrationResult = false;
 		for (int i = 2; i >= 0; i--) {
 			if (randomNum < enemy._armorWeakness[i]) {
-				penetrationResult = this._penetration > 
+				penetrationResult = this._penetration * randomPenetrationRatio > 
 					(holdPos ? enemy._armor[i] * 1.05 : enemy._armor[i]);
 				break;
 			}

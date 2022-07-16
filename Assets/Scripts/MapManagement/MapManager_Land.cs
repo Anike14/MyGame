@@ -47,7 +47,8 @@ public class MapManager_Land : MonoBehaviour
         seaTiles = GetTilemapCellPositionsFrom(_seaTilemap);
     }
 
-    private static bool isFirable(Tank tank, List<Vector2Int> tilePosition, Dictionary<Vector2Int, int> stepDictionary) {
+    private static bool isFirable(Tank tank, List<Vector2Int> tilePosition, LayerMask myLayerMask, Dictionary<Vector2Int, int> stepDictionary) {
+        if (Physics2D.OverlapPoint(_tilemap.GetCellCenterWorld((Vector3Int)tilePosition[0]), myLayerMask) != null) return false;
         if (mountainTiles.Contains(tilePosition[0])) {
             return false;
         } else if (seaTiles.Contains(tilePosition[0])) {
@@ -62,8 +63,10 @@ public class MapManager_Land : MonoBehaviour
         return true;
     }
 
-    private static bool isTerrainMovable(Tank tank, List<Vector2Int> tilePosition, float currentActionPoints, 
-        Dictionary<Vector2Int, int> stepDictionary, Dictionary<Vector2Int, float> consumptionDictionary) {
+    private static bool isTerrainMovable(Tank tank, List<Vector2Int> tilePosition, LayerMask myLayerMask, LayerMask enemyLayerMask,
+        float currentActionPoints, Dictionary<Vector2Int, int> stepDictionary, Dictionary<Vector2Int, float> consumptionDictionary) {
+        if (Physics2D.OverlapPoint(_tilemap.GetCellCenterWorld((Vector3Int)tilePosition[0]), myLayerMask) != null
+            || Physics2D.OverlapPoint(_tilemap.GetCellCenterWorld((Vector3Int)tilePosition[0]), enemyLayerMask) != null) return false;
         int maximumMovable = tank._maximumMovement;
         if (mountainTiles.Contains(tilePosition[0])) {
             if (stepDictionary.ContainsKey(tilePosition[0])) {
@@ -210,28 +213,31 @@ public class MapManager_Land : MonoBehaviour
         stepDictionary.Add(startNode[0], 0);
         consumptionDictionary.Add(startNode[0], 0);
         visitedTiles.Add(startNode);
-
         while (tilesToBeVisited.Count > 0) {
             List<Vector2Int> currentTile = tilesToBeVisited.Dequeue();
-            if (startNode[0] != startCell
+            if (currentActionPoints == -1f && startNode[0] != startCell
                 && Physics2D.OverlapPoint(
                     _tilemap.GetCellCenterWorld((Vector3Int)currentTile[0]), myLayerMask) != null) continue;
-            if (currentActionPoints != -1f
-                && Physics2D.OverlapPoint(
-                    _tilemap.GetCellCenterWorld((Vector3Int)currentTile[0]), enemyLayerMask) != null) continue;
+            if (currentActionPoints != -1f && startNode[0] != startCell
+                && (Physics2D.OverlapPoint(
+                    _tilemap.GetCellCenterWorld((Vector3Int)currentTile[0]), myLayerMask) != null
+                || Physics2D.OverlapPoint(
+                    _tilemap.GetCellCenterWorld((Vector3Int)currentTile[0]), enemyLayerMask) != null)) continue;
             if (!visitedTiles.Contains(currentTile)) visitedTiles.Add(currentTile);
             foreach (List<Vector2Int> neighbourPosition in GetNeighboursFor(currentTile[0])) {
                 if (!visitedTiles.Contains(neighbourPosition)) {
                     if (currentActionPoints == -1f) { // in firing we don't consider the action points
-                        if (isFirable(tank, neighbourPosition, stepDictionary))
+                        if (isFirable(tank, neighbourPosition, myLayerMask, stepDictionary))
                             tilesToBeVisited.Enqueue(neighbourPosition);
                     } else {
-                        if (isTerrainMovable(tank, neighbourPosition, currentActionPoints, stepDictionary, consumptionDictionary))
+                        if (isTerrainMovable(tank, neighbourPosition, myLayerMask, enemyLayerMask, 
+                            currentActionPoints, stepDictionary, consumptionDictionary))
                             tilesToBeVisited.Enqueue(neighbourPosition);
                     }
                 }
             }
         }
+        visitedTiles.Remove(startNode);
         return visitedTiles;
     }
 
