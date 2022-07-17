@@ -1,3 +1,5 @@
+using System.Collections;
+
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -5,10 +7,21 @@ public class Tank : UnitBase
 {
     [SerializeField]
     private UnityEvent OnFiring;
+
+    [SerializeField]
+    private AudioSource _fireAudio;
+
     [SerializeField]
     private UnityEvent OnPenetrated;
+
+    [SerializeField]
+    private AudioSource _getPenetratedAudio;
+
     [SerializeField]
     private UnityEvent OnScratched;
+
+    [SerializeField]
+    private AudioSource _getScratchedAudio;
 
     [SerializeField]
 	public int _fireRange;
@@ -91,8 +104,21 @@ public class Tank : UnitBase
 	}
 
 	public void FireAt(Tank enemy) {
+		/**
+			https://stackoverflow.com/questions/44246629/coroutine-and-waitforseconds-not-working-as-planned:
+
+			Similar questions have been asked many times before, on StackOverflow and on Unity Answers.
+			Coroutines do not pause the execution of the function they have been called into. You have to put your logic inside a big coroutine instead :
+		**/
+		StartCoroutine(fire(enemy));
+	}
+
+	private IEnumerator fire(Tank enemy) {
 		// play fire feedback
-		this.fire();
+		_fireAudio.Play();
+		// let's have a 0.35s waiting for playing the main gun sound
+		yield return new WaitForSeconds(0.35f);
+		OnFiring?.Invoke();
 
 		int randomNum = Random.Range(1, 100);
 		float randomPenetrationRatio = 1 + Random.Range(-_gunStability, _gunStability);
@@ -105,6 +131,8 @@ public class Tank : UnitBase
 			}
 		}
 		
+		// let's have a 0.6s waiting for the shell to arrive
+		yield return new WaitForSeconds(0.35f);
 		if (penetrationResult) {
 			// play enemy calculation feedback
 			Debug.Log("penetration!");
@@ -116,15 +144,13 @@ public class Tank : UnitBase
 		}
 	}
 
-	private void fire() {
-		OnFiring?.Invoke();
-	}
-
 	private void getPenetrated() {
+		_getPenetratedAudio.Play();
 		OnPenetrated?.Invoke();
 	}
 
 	private void getScratched() {
+		_getScratchedAudio.Play();
 		OnScratched?.Invoke();
 	}
 }

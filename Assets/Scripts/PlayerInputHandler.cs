@@ -11,6 +11,9 @@ public class PlayerInputHandler : MonoBehaviour
 	public GameObject _me;
 
     [SerializeField]
+    private List<GameObject> _vitoryConditions;
+
+    [SerializeField]
 	public Camera _currentCamera;
 
     [SerializeField]
@@ -30,6 +33,9 @@ public class PlayerInputHandler : MonoBehaviour
     
     [SerializeField]
 	private UnityEvent<GameObject> OnHandleEnemySelection;
+    
+    [SerializeField]
+	private UnityEvent OnVictory;
 
     [SerializeField]
     private UnityEvent<LayerMask, LayerMask> OnHandleAiming;
@@ -98,6 +104,15 @@ public class PlayerInputHandler : MonoBehaviour
 
     public void HandleDeactivateAimingMode() {
         this.aimingMode = false;
+    }
+
+    public void HandleUnitDestroyed(GameObject destroyedTarget) {
+        if (_vitoryConditions.Contains(destroyedTarget)) {
+            _vitoryConditions.Remove(destroyedTarget);
+        }
+        if (_vitoryConditions.Count == 0) {
+            OnVictory?.Invoke();
+        }
     }
 
     public void HandleDeselect() {

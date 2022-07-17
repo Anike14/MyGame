@@ -3,8 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 
 using UnityEngine;
-using UnityEngine.InputSystem;
-using UnityEngine.Tilemaps;
 using UnityEngine.Events;
 
 public class UnitMovement : MonoBehaviour
@@ -17,6 +15,9 @@ public class UnitMovement : MonoBehaviour
 
     [SerializeField]
     private UnityEvent OnSelectedObjectFirable;
+
+    [SerializeField]
+    private UnityEvent<GameObject> OnTargetObjectDestroyed;
 
     [SerializeField]
     private MovementRangeHighlight movementRangeHighlight;
@@ -56,13 +57,15 @@ public class UnitMovement : MonoBehaviour
 
     public void HandleSelection(GameObject selection, LayerMask myLayerMask, LayerMask enemyLayerMask) {
         if (selection == null) { Deselect(); return; }
-        if (this.selectedObject != null)
-            this.selectedObject.transform.position = originalPosition;
-
+        if (this.selectedObject != null && this.selectedObject != selection) { 
+            if (movingTowards != null) return;
+            else Deselect(true);
+        }
         this.selectedObject = selection;
         movingPosition = this.selectedObject.transform.position;
         selectedUnit = selectedObject.transform.GetChild(0).GetComponent<UnitBase>();
         if (selectedUnit.IsActable()) _selectionPanel.SetActive(true);
+        selectedUnit.PlaySelectedEffect();
         if (selectedUnit._unitType == Constants._unitType_Tank) {
             Tank tank = (Tank)selectedUnit;
             if (tank.IsMovable()) {
@@ -76,6 +79,7 @@ public class UnitMovement : MonoBehaviour
 
 	public void HandleMovement(Vector3 mouseInput) {
         if (selectedObject == null) return;
+        if (selectedUnit != null && selectedUnit.IsMoving()) return;
         if (!selectedUnit.IsMovable()) { Deselect(); return; }
         movingTowards = new Stack<List<Vector2Int>>();
         Vector2Int targetPosition = (Vector2Int)MapManager_Land._tilemap.WorldToCell(mouseInput);
@@ -87,6 +91,7 @@ public class UnitMovement : MonoBehaviour
                 targetTowards = movableRange.Find(target => target[0] == targetTowards[1]);
                 movingTowards.Push(targetTowards);
             }
+            selectedUnit.PlayMovingEffect();
         } else Deselect();
     }
 
@@ -135,9 +140,6 @@ public class UnitMovement : MonoBehaviour
         if (selectedUnit._unitType == Constants._unitType_Tank) {
             Tank tank = (Tank)selectedUnit;
             Tank enemyTank = (Tank)selectedEnemyUnit;
-            Debug.Log("enemyTank.transform.position.x: " + enemyTank.transform.position.x);
-            Debug.Log("tank.transform.position.x: " + tank.transform.position.x);
-            Debug.Log("tank.transform.localScale.x: " + tank.transform.localScale.x);
             if (enemyTank.transform.position.x > tank.transform.position.x
                 && selectedObject.transform.localScale.x > 0) FlipUnit();
             else if (enemyTank.transform.position.x < tank.transform.position.x
@@ -181,14 +183,20 @@ public class UnitMovement : MonoBehaviour
         OnDeactivateAimingMode?.Invoke();
     }
 
-    private void Deselect() {
+    public void Deselect() { 
+        this.Deselect(false); 
+    }
+
+    private void Deselect(bool Silience) {
         if (selectedObject != null)
             selectedObject.transform.position = originalPosition;
+        if (selectedUnit != null)
+            selectedUnit.PlayDeselectedEffect();
         movementRangeHighlight.ClearMovable();
         movingTowards = null;
         selectedUnit = null;
         selectedObject = null;
         _selectionPanel.SetActive(false);
-        OnSelectedObjectDeselect?.Invoke();
+        if (!Silience) OnSelectedObjectDeselect?.Invoke();
     }
 }
