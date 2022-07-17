@@ -47,8 +47,7 @@ public class MapManager_Land : MonoBehaviour
         seaTiles = GetTilemapCellPositionsFrom(_seaTilemap);
     }
 
-    private static bool isFirable(Tank tank, List<Vector2Int> tilePosition, LayerMask myLayerMask, Dictionary<Vector2Int, int> stepDictionary) {
-        if (Physics2D.OverlapPoint(_tilemap.GetCellCenterWorld((Vector3Int)tilePosition[0]), myLayerMask) != null) return false;
+    private static bool isFirable(Tank tank, List<Vector2Int> tilePosition, Dictionary<Vector2Int, int> stepDictionary) {
         if (mountainTiles.Contains(tilePosition[0])) {
             return false;
         } else if (seaTiles.Contains(tilePosition[0])) {
@@ -227,7 +226,7 @@ public class MapManager_Land : MonoBehaviour
             foreach (List<Vector2Int> neighbourPosition in GetNeighboursFor(currentTile[0])) {
                 if (!visitedTiles.Contains(neighbourPosition)) {
                     if (currentActionPoints == -1f) { // in firing we don't consider the action points
-                        if (isFirable(tank, neighbourPosition, myLayerMask, stepDictionary))
+                        if (isFirable(tank, neighbourPosition, stepDictionary))
                             tilesToBeVisited.Enqueue(neighbourPosition);
                     } else {
                         if (isTerrainMovable(tank, neighbourPosition, myLayerMask, enemyLayerMask, 
