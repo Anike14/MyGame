@@ -69,9 +69,6 @@ public class Tank : UnitBase
 	[SerializeField]
 	public float[] _armorWeakness;
 
-	[SerializeField]
-	public float[] _stealth = new float[6];
-
 	private bool scoutPos = false;
 
 	private bool holdPos = false;
@@ -91,16 +88,28 @@ public class Tank : UnitBase
 		hidePos = false;
 	}
 
+	public bool IsScouting() {
+		return scoutPos;
+	}
+
 	public void holding() {
 		scoutPos = false;
 		holdPos = true;
 		hidePos = false;
 	}
 
+	public bool IsHolding() {
+		return holdPos;
+	}
+
 	public void hiding() {
 		scoutPos = false;
 		holdPos = true;
 		hidePos = true;
+	}
+	
+	public bool IsHiding() {
+		return hidePos;
 	}
 
 	public void FireAt(Tank enemy) {
@@ -126,7 +135,7 @@ public class Tank : UnitBase
 		for (int i = 2; i >= 0; i--) {
 			if (randomNum < enemy._armorWeakness[i]) {
 				penetrationResult = this._penetration * randomPenetrationRatio > 
-					(holdPos ? enemy._armor[i] * 1.05 : enemy._armor[i]);
+					(IsHolding() ? enemy._armor[i] * 1.05 : enemy._armor[i]);
 				break;
 			}
 		}

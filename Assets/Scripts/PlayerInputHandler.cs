@@ -23,7 +23,7 @@ public class PlayerInputHandler : MonoBehaviour
 	public LayerMask _enemyLayerMask;
 
     [SerializeField]
-	private UnityEvent OnHandleUpdate;
+	private UnityEvent<LayerMask, LayerMask> OnHandleUpdate;
 
     [SerializeField]
 	private UnityEvent<GameObject, LayerMask, LayerMask> OnHandleSelection;
@@ -55,11 +55,20 @@ public class PlayerInputHandler : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0) 
             && !EventSystem.current.IsPointerOverGameObject()) {
+
 			if (this.aimingMode || selectedObject == null)
                 HandleSelection();
             else HandleMove();
         }
-        OnHandleUpdate?.Invoke();
+        OnHandleUpdate?.Invoke(_myLayerMask, _enemyLayerMask);
+    }
+
+    public void NewTurn() {
+        foreach(UnitBase unit in FindObjectsOfType<UnitBase>()) {
+            if (_vitoryConditions.Contains(unit._me)) 
+                unit.enemyTurn();
+            else unit.myTurn();
+        }
     }
 
     private void HandleSelection() {
@@ -78,7 +87,6 @@ public class PlayerInputHandler : MonoBehaviour
         // we're not clicking on a UI object, so do your normal movement stuff here
         Vector3 mouseInput = _currentCamera.ScreenToWorldPoint(Input.mousePosition);
         mouseInput.z = 0f;
-        
         Collider2D collider = Physics2D.OverlapPoint(mouseInput, _myLayerMask);
         if (collider != null) {
             HandleSelection();

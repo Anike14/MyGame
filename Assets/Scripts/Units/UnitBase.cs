@@ -6,10 +6,19 @@ using UnityEngine.Events;
 public class UnitBase : MonoBehaviour
 {
     [SerializeField]
+    public GameObject _me;
+
+    [SerializeField]
     private UnityEvent OnActivateActable;
 
     [SerializeField]
     private UnityEvent OnDeactivateActable;
+
+    [SerializeField]
+    private UnityEvent OnScouted;
+
+    [SerializeField]
+    private UnityEvent OnConcealed;
 
     [SerializeField]
     public string _unitType;
@@ -27,6 +36,14 @@ public class UnitBase : MonoBehaviour
 
     [SerializeField]
     private AudioSource _deselectedAudio;
+    
+	[SerializeField]
+	public int _viewRange;
+    
+	[SerializeField]
+	public float[] _stealth = new float[6];
+
+	private int showingForEnemy = 0;
 
     private bool _canMove = true;
     private bool _canAct = true;
@@ -85,6 +102,30 @@ public class UnitBase : MonoBehaviour
 
     public void ActivateDestroyed() {
         _destroyed = true;
+    }
+
+    public void myTurn() {
+        OnScouted?.Invoke();
+        ActivateMovable();
+    }
+
+    public void enemyTurn() {
+        if (showingForEnemy > 0) {
+            showingForEnemy--;
+        }
+        if (showingForEnemy == 0) {
+            OnConcealed?.Invoke();
+        }
+        ActivateMovable();
+    }
+
+    public void Scouted() {
+        showingForEnemy = 2;
+        OnScouted?.Invoke();
+    }
+
+    public bool IsConcealed() {
+        return showingForEnemy == 0;
     }
 
     public void ActivateMovable() {

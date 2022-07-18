@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5776981260230570145}
   - component: {fileID: 3270100401933862788}
   - component: {fileID: 3801918134200217751}
+  - component: {fileID: 5551316504455001286}
   - component: {fileID: 7441589664808966753}
   - component: {fileID: 7429337752871188523}
   - component: {fileID: 4796952664383431086}
@@ -108,6 +109,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 893e69215da574c40999fb8b0781182a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _me: {fileID: 3633781401086625690}
   OnActivateActable:
     m_PersistentCalls:
       m_Calls:
@@ -150,11 +152,49 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  OnScouted:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 5551316504455001286}
+        m_TargetAssemblyTypeName: ConcealmentFeedback, Assembly-CSharp
+        m_MethodName: StopFeedback
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnConcealed:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 5551316504455001286}
+        m_TargetAssemblyTypeName: ConcealmentFeedback, Assembly-CSharp
+        m_MethodName: PlayFeedback
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   _unitType: Tank
   _selectedAudio: {fileID: 1495485146779869032}
   _idleAudio: {fileID: 8622110818152781254}
   _movingAudio: {fileID: 4114134749215585703}
   _deselectedAudio: {fileID: 3247424898359754340}
+  _viewRange: 0
+  _stealth:
+  - 70
+  - 50
+  - 40
+  - 30
+  - 20
+  - 10
   OnFiring:
     m_PersistentCalls:
       m_Calls:
@@ -229,13 +269,20 @@ MonoBehaviour:
   - 50
   - 45
   - 5
-  _stealth:
-  - 70
-  - 50
-  - 40
-  - 30
-  - 20
-  - 10
+--- !u!114 &5551316504455001286
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 197826875461656137}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a8c4decd7522a5c4da24829ecf7a1275, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  me: {fileID: 3801918134200217751}
+  spriteRenderer: {fileID: 3270100401933862788}
 --- !u!114 &7441589664808966753
 MonoBehaviour:
   m_ObjectHideFlags: 0

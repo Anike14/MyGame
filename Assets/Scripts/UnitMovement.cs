@@ -42,11 +42,19 @@ public class UnitMovement : MonoBehaviour
     private Vector3 originalPosition;
     private Vector3 movingPosition;
 
-    public void HandleUpdate() {
+    public void HandleUpdate(LayerMask myLayer, LayerMask enemyLayer) {
         if (selectedObject != null && selectedObject.transform.position != movingPosition) {
             if (movingPosition.x > selectedObject.transform.position.x && selectedObject.transform.localScale.x > 0) FlipUnit();
             selectedObject.transform.position = Vector2.MoveTowards(selectedObject.transform.position, movingPosition, 10f * Time.deltaTime);
         } else if (selectedObject != null && movingTowards != null && selectedObject.transform.position == movingPosition) {
+            if (selectedUnit._unitType == Constants._unitType_Tank) {
+                // using BFS for scouting enemy
+                // if (MapManager_Land.BFS((Tank)selectedUnit, (Vector2Int)MapManager_Land._tilemap.WorldToCell(selectedObject.transform.position),
+                //     -100, myLayer, enemyLayer) == null) {
+                //     MovingDone();
+                //     return;
+                // }
+            }
             if (movingTowards.Count > 0) {
                 movingPosition = MapManager_Land._tilemap.GetCellCenterWorld((Vector3Int)movingTowards.Pop()[0]);
             if (movingPosition.x < selectedObject.transform.position.x && selectedObject.transform.localScale.x < 0) FlipUnit();
@@ -56,7 +64,8 @@ public class UnitMovement : MonoBehaviour
     }
 
     public void HandleSelection(GameObject selection, LayerMask myLayerMask, LayerMask enemyLayerMask) {
-        if (selection == null) { Deselect(); return; }
+        if (selection == null) { 
+            Deselect(); return; }
         if (this.selectedObject != null && this.selectedObject != selection) { 
             if (movingTowards != null) return;
             else Deselect(true);
@@ -125,7 +134,7 @@ public class UnitMovement : MonoBehaviour
         if (firableRange.Find(target => target[0] == targetPosition) == null) { DeactivateAimingMode(); return; }
         this.selectedEnemyObject = selection;
         selectedEnemyUnit = selectedEnemyObject.transform.GetChild(0).GetComponent<UnitBase>();
-        if (selectedEnemyUnit.IsDestroyed()) return;
+        if (selectedEnemyUnit.IsDestroyed() || selectedEnemyUnit.IsConcealed()) return;
         if (selectedEnemyUnit._unitType == Constants._unitType_Tank) {
             Tank enemyTank = (Tank)selectedEnemyUnit;
             // show enemyTank on the sidebar

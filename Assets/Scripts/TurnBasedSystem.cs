@@ -13,13 +13,16 @@ public class TurnBasedSystem : MonoBehaviour
 
     private int currentTurn = 0;
 
+    // Start is called before the first frame update
+    void Start()
+    {
+        NextTurn();
+    }
+
     public void NextTurn() {
         if (currentTurn % 2 == 0)
             OnEvenTurnEnd?.Invoke();
         else OnOddTurnEnd?.Invoke();
-        foreach(UnitBase unit in FindObjectsOfType<UnitBase>()) {
-            unit.ActivateMovable();
-        }
         currentTurn++;
     }
 }
