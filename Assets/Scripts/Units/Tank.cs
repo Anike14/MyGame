@@ -69,49 +69,6 @@ public class Tank : UnitBase
 	[SerializeField]
 	public float[] _armorWeakness;
 
-	private bool scoutPos = false;
-
-	private bool holdPos = false;
-
-	private bool hidePos = false;
-
-	public void ResetPos() {
-		if (this.IsDestroyed()) return;
-		scoutPos = false;
-		holdPos = false;
-		hidePos = false;
-	}
-
-	public void Scouting() {
-		scoutPos = true;
-		holdPos = false;
-		hidePos = false;
-	}
-
-	public bool IsScouting() {
-		return scoutPos;
-	}
-
-	public void holding() {
-		scoutPos = false;
-		holdPos = true;
-		hidePos = false;
-	}
-
-	public bool IsHolding() {
-		return holdPos;
-	}
-
-	public void hiding() {
-		scoutPos = false;
-		holdPos = true;
-		hidePos = true;
-	}
-	
-	public bool IsHiding() {
-		return hidePos;
-	}
-
 	public void FireAt(Tank enemy) {
 		/**
 			https://stackoverflow.com/questions/44246629/coroutine-and-waitforseconds-not-working-as-planned:
@@ -125,6 +82,11 @@ public class Tank : UnitBase
 	private IEnumerator fire(Tank enemy) {
 		// play fire feedback
 		_fireAudio.Play();
+		if (!isMyTurn) {
+			if (this.showingForEnemy == 0)
+            	OnScouted?.Invoke(false);
+			else this.Scouted();
+		}
 		// let's have a 0.35s waiting for playing the main gun sound
 		yield return new WaitForSeconds(0.35f);
 		OnFiring?.Invoke();
@@ -144,11 +106,9 @@ public class Tank : UnitBase
 		yield return new WaitForSeconds(0.35f);
 		if (penetrationResult) {
 			// play enemy calculation feedback
-			Debug.Log("penetration!");
 			enemy.getPenetrated();
 		} else {
 			// play enemy calculation feedback
-			Debug.Log("scratch!!!");
 			enemy.getScratched();
 		}
 	}

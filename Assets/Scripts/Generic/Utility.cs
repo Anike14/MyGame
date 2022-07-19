@@ -7,4 +7,7 @@ using UnityEditor;
 
 static public class Utility
 {
+    public static bool IsUnitInLayerMask(UnitBase unit, LayerMask layerMask) {
+        return (layerMask.value & (1 << unit.gameObject.layer)) > 0;
+    }
 }

@@ -47,7 +47,8 @@ public class MapManager_Land : MonoBehaviour
         seaTiles = GetTilemapCellPositionsFrom(_seaTilemap);
     }
 
-    private static bool IsFirable(Tank tank, List<Vector2Int> tilePosition, Dictionary<Vector2Int, int> stepDictionary) {
+    private static bool IsFirable(Tank tank, List<Vector2Int> tilePosition, LayerMask myLayerMask, Dictionary<Vector2Int, int> stepDictionary) {
+        if (Physics2D.OverlapPoint(_tilemap.GetCellCenterWorld((Vector3Int)tilePosition[0]), myLayerMask) != null) return false;
         if (mountainTiles.Contains(tilePosition[0])) {
             return false;
         } else if (seaTiles.Contains(tilePosition[0])) {
@@ -62,40 +63,14 @@ public class MapManager_Land : MonoBehaviour
         return true;
     }
 
-    private static bool Scouting(Tank tank, List<Vector2Int> tilePosition, LayerMask enemyLayerMask, Dictionary<Vector2Int, int> stepDictionary, bool scoutingResult) {
-        if (stepDictionary.ContainsKey(tilePosition[0])) return false;
-        int currentDistance = stepDictionary[tilePosition[1]] + 1;
-        if (currentDistance > tank._viewRange + (tank.IsScouting() ? 1 : 0)) return false;
-        stepDictionary.Add(tilePosition[0], currentDistance);
-        Collider2D enemyCollider = Physics2D.OverlapPoint(_tilemap.GetCellCenterWorld((Vector3Int)tilePosition[0]), enemyLayerMask);
-        if (enemyCollider != null) {
-            Tank enemy = enemyCollider.gameObject.GetComponentInChildren<Tank>();
-            if (currentDistance <= 3) {
-                // showEnemy
-                enemy.Scouted();
-                scoutingResult = true;
-            } else {
-                int randomNum = Random.Range(1, 100);
-                float extraEffect = 0f;
-                if (enemy.IsHolding()) 
-                    extraEffect = 0.5f; // holding position lose 50% concealment
-                else if (enemy.IsHiding()) 
-                    extraEffect = 1.1f; // hiding in a position gain 10% more concealment
-
-                if (randomNum > enemy._stealth[9 - currentDistance] * extraEffect) {
-                    // showEnemy
-                    enemy.Scouted();
-                    scoutingResult = true;
-                }
-            }
-        }
-        return true;
-    }
-
     private static bool IsTerrainMovable(Tank tank, List<Vector2Int> tilePosition, LayerMask myLayerMask, LayerMask enemyLayerMask,
         float currentActionPoints, Dictionary<Vector2Int, int> stepDictionary, Dictionary<Vector2Int, float> consumptionDictionary) {
-        if (Physics2D.OverlapPoint(_tilemap.GetCellCenterWorld((Vector3Int)tilePosition[0]), myLayerMask) != null
-            || Physics2D.OverlapPoint(_tilemap.GetCellCenterWorld((Vector3Int)tilePosition[0]), enemyLayerMask) != null) return false;
+        if (Physics2D.OverlapPoint(_tilemap.GetCellCenterWorld((Vector3Int)tilePosition[0]), myLayerMask) != null) return false;
+        Collider2D enemyCollider = Physics2D.OverlapPoint(_tilemap.GetCellCenterWorld((Vector3Int)tilePosition[0]), enemyLayerMask);
+        if (enemyCollider != null) {
+            Tank enemyTank = enemyCollider.gameObject.GetComponentInChildren<Tank>();
+            if (enemyTank.IsScouted()) return false;
+        }
         int maximumMovable = tank._maximumMovement;
         if (mountainTiles.Contains(tilePosition[0])) {
             if (stepDictionary.ContainsKey(tilePosition[0])) {
@@ -222,6 +197,57 @@ public class MapManager_Land : MonoBehaviour
         return res;
     }
 
+    public static bool ScoutFromMyPosition(Tank tank, Vector2Int startCell, LayerMask enemyLayerMask) {
+        bool res = false;
+        // Another BFS
+        Queue<List<Vector2Int>> tilesToBeVisited = new Queue<List<Vector2Int>>();
+        Dictionary<Vector2Int, int> stepDictionary = new Dictionary<Vector2Int, int>();
+        List<List<Vector2Int>> visitedTiles = new List<List<Vector2Int>>();
+        List<Vector2Int> startNode = new List<Vector2Int>{startCell, startCell};
+
+        tilesToBeVisited.Enqueue(startNode);
+        stepDictionary.Add(startNode[0], 0);
+        visitedTiles.Add(startNode);
+        while (tilesToBeVisited.Count > 0) {
+            List<Vector2Int> currentTile = tilesToBeVisited.Dequeue();
+            if (!visitedTiles.Contains(currentTile)) visitedTiles.Add(currentTile);
+            Collider2D enemyCollider = Physics2D.OverlapPoint(_tilemap.GetCellCenterWorld((Vector3Int)currentTile[0]), enemyLayerMask);
+            if (enemyCollider != null) {
+                Tank enemyTank = enemyCollider.gameObject.GetComponentInChildren<Tank>();
+                if (stepDictionary[currentTile[0]] <= 3) {
+                    if (!enemyTank.IsScouted()) res = true;
+                    enemyTank.Scouted();
+                } else {
+                    float randomNum = Random.Range(1, 100);
+                    float extraConcealment = 0f;
+                    if (enemyTank.IsHolding()) extraConcealment = 0.5f;
+                    else if (enemyTank.IsHiding()) extraConcealment = 1.1f;
+                    if (randomNum > enemyTank._stealth[9 - stepDictionary[currentTile[0]]] * extraConcealment) {
+                        if (!enemyTank.IsScouted()) res = true;
+                        enemyTank.Scouted();
+                    }
+                }
+            }
+            int maximumViewRange = tank._viewRange + (tank.IsScouting() ? 1 : 0);
+            foreach (List<Vector2Int> neighbourPosition in GetNeighboursFor(currentTile[0])) {
+                if (!visitedTiles.Contains(neighbourPosition) && !tilesToBeVisited.Contains(neighbourPosition)) {
+                    if (stepDictionary[neighbourPosition[1]] + 1 <= maximumViewRange) {
+                        if (stepDictionary.ContainsKey(neighbourPosition[0])) {
+                            if (stepDictionary[neighbourPosition[0]] > stepDictionary[neighbourPosition[1]] + 1) {
+                                stepDictionary[neighbourPosition[0]] = stepDictionary[neighbourPosition[1]] + 1;
+                                tilesToBeVisited.Enqueue(neighbourPosition);
+                            }
+                        } else {
+                            stepDictionary.Add(neighbourPosition[0], stepDictionary[neighbourPosition[1]] + 1);
+                            tilesToBeVisited.Enqueue(neighbourPosition);
+                        }
+                    }
+                }
+            }
+        }
+        return res;
+    }
+    
     
     public static List<List<Vector2Int>> GetFirePowerRange(Tank tank, Vector3Int currentPosition, LayerMask myLayerMask, LayerMask enemyLayerMask) {
         return MapManager_Land.BFS(tank, (Vector2Int)currentPosition, -1f, myLayerMask, enemyLayerMask);
@@ -243,29 +269,14 @@ public class MapManager_Land : MonoBehaviour
         consumptionDictionary.Add(startNode[0], 0);
         visitedTiles.Add(startNode);
 
-        // For ScoutingMode currentActionPoints = -100
-        bool scoutingResult = false;
-
         while (tilesToBeVisited.Count > 0) {
             List<Vector2Int> currentTile = tilesToBeVisited.Dequeue();
-            if (currentActionPoints == -1f && startNode[0] != startCell
-                && Physics2D.OverlapPoint(
-                    _tilemap.GetCellCenterWorld((Vector3Int)currentTile[0]), myLayerMask) != null) continue;
-            if (currentActionPoints != -1f && startNode[0] != startCell
-                && (Physics2D.OverlapPoint(
-                    _tilemap.GetCellCenterWorld((Vector3Int)currentTile[0]), myLayerMask) != null
-                || Physics2D.OverlapPoint(
-                    _tilemap.GetCellCenterWorld((Vector3Int)currentTile[0]), enemyLayerMask) != null)) continue;
             if (!visitedTiles.Contains(currentTile)) visitedTiles.Add(currentTile);
             foreach (List<Vector2Int> neighbourPosition in GetNeighboursFor(currentTile[0])) {
                 if (!visitedTiles.Contains(neighbourPosition)) {
                     if (currentActionPoints == -1f) { // in firing we don't consider the action points
-                        if (IsFirable(tank, neighbourPosition, stepDictionary))
-                            tilesToBeVisited.Enqueue(neighbourPosition);
-                    } else if (currentActionPoints == -100f) { // in scouting mode
-                        if (Scouting(tank, neighbourPosition, enemyLayerMask, stepDictionary, scoutingResult))
-                            tilesToBeVisited.Enqueue(neighbourPosition);
-                    } else {
+                        if (IsFirable(tank, neighbourPosition, myLayerMask, stepDictionary))
+                            tilesToBeVisited.Enqueue(neighbourPosition);} else {
                         if (IsTerrainMovable(tank, neighbourPosition, myLayerMask, enemyLayerMask, 
                             currentActionPoints, stepDictionary, consumptionDictionary))
                             tilesToBeVisited.Enqueue(neighbourPosition);
@@ -273,7 +284,6 @@ public class MapManager_Land : MonoBehaviour
                 }
             }
         }
-        if (currentActionPoints == -100f && scoutingResult) return null;
         visitedTiles.Remove(startNode);
         return visitedTiles;
     }

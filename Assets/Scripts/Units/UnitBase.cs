@@ -15,27 +15,27 @@ public class UnitBase : MonoBehaviour
     private UnityEvent OnDeactivateActable;
 
     [SerializeField]
-    private UnityEvent OnScouted;
+    protected UnityEvent<bool> OnScouted;
 
     [SerializeField]
-    private UnityEvent OnConcealed;
+    protected UnityEvent OnConcealed;
 
     [SerializeField]
     public string _unitType;
     
     [SerializeField]
-    private AudioSource _selectedAudio;
+    protected AudioSource _selectedAudio;
 
-    private bool _idled = false;
-
-    [SerializeField]
-    private AudioSource _idleAudio;
+    protected bool _idled = false;
 
     [SerializeField]
-    private AudioSource _movingAudio;
+    protected AudioSource _idleAudio;
 
     [SerializeField]
-    private AudioSource _deselectedAudio;
+    protected AudioSource _movingAudio;
+
+    [SerializeField]
+    protected AudioSource _deselectedAudio;
     
 	[SerializeField]
 	public int _viewRange;
@@ -43,11 +43,63 @@ public class UnitBase : MonoBehaviour
 	[SerializeField]
 	public float[] _stealth = new float[6];
 
-	private int showingForEnemy = 0;
+	protected bool scoutPos = false;
 
-    private bool _canMove = true;
-    private bool _canAct = true;
-    private bool _destroyed = false;
+	protected bool holdPos = false;
+
+	protected bool hidePos = false;
+
+    protected bool isMyTurn = false;
+
+    public void PlayerUpdate(LayerMask myLayer, LayerMask enemyLayer) {
+        if (this._unitType == Constants._unitType_Tank) {
+            MapManager_Land.ScoutFromMyPosition((Tank)this, 
+                (Vector2Int)MapManager_Land._tilemap.WorldToCell(this.gameObject.transform.position), enemyLayer);
+        }
+    }
+
+	public void ResetPos() {
+		if (this.IsDestroyed()) return;
+		scoutPos = false;
+		holdPos = false;
+		hidePos = false;
+	}
+
+	public void Scouting() {
+		scoutPos = true;
+		holdPos = false;
+		hidePos = false;
+	}
+
+	public bool IsScouting() {
+		return scoutPos;
+	}
+
+	public void holding() {
+		scoutPos = false;
+		holdPos = true;
+		hidePos = false;
+	}
+
+	public bool IsHolding() {
+		return holdPos;
+	}
+
+	public void hiding() {
+		scoutPos = false;
+		holdPos = true;
+		hidePos = true;
+	}
+	
+	public bool IsHiding() {
+		return hidePos;
+	}
+
+	protected int showingForEnemy = 0;
+
+    protected bool _canMove = true;
+    protected bool _canAct = true;
+    protected bool _destroyed = false;
 
     public void PlaySelectedEffect() {
         if (_selectedAudio.isPlaying) return;
@@ -96,6 +148,10 @@ public class UnitBase : MonoBehaviour
         return !_destroyed && _canAct;
     }
 
+    public bool IsScouted() {
+        return showingForEnemy > 0;
+    }
+
     public bool IsDestroyed() {
         return _destroyed;
     }
@@ -105,23 +161,29 @@ public class UnitBase : MonoBehaviour
     }
 
     public void myTurn() {
-        OnScouted?.Invoke();
+        this.isMyTurn = true;
+        OnScouted?.Invoke(true);
         ActivateMovable();
     }
 
     public void enemyTurn() {
+        this.isMyTurn = false;
         if (showingForEnemy > 0) {
             showingForEnemy--;
         }
         if (showingForEnemy == 0) {
             OnConcealed?.Invoke();
         }
-        ActivateMovable();
+
+        //Just paint the unit
+        OnActivateActable?.Invoke();
     }
 
     public void Scouted() {
+        if (showingForEnemy == 0) {
+            OnScouted?.Invoke(false);
+        }
         showingForEnemy = 2;
-        OnScouted?.Invoke();
     }
 
     public bool IsConcealed() {
@@ -130,20 +192,17 @@ public class UnitBase : MonoBehaviour
 
     public void ActivateMovable() {
         if (_destroyed) return;
-        Debug.Log("activating actable....");
         _canMove = true;
         _canAct = true;
         OnActivateActable?.Invoke();
     }
 
     public void DeactivateMovable() {
-        Debug.Log("deactivating movable....");
         StopMovingEffect();
         _canMove = false;
     }
 
     public void DeactivateActable() {
-        Debug.Log("deactivating actable....");
         DeactivateMovable();
         _canAct = false;
         OnDeactivateActable?.Invoke();

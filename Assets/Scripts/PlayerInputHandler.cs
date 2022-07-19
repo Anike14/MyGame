@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 
 using UnityEngine;
@@ -47,7 +46,6 @@ public class PlayerInputHandler : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
     }
 
     // Update is called once per frame
@@ -55,7 +53,6 @@ public class PlayerInputHandler : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0) 
             && !EventSystem.current.IsPointerOverGameObject()) {
-
 			if (this.aimingMode || selectedObject == null)
                 HandleSelection();
             else HandleMove();
@@ -65,9 +62,15 @@ public class PlayerInputHandler : MonoBehaviour
 
     public void NewTurn() {
         foreach(UnitBase unit in FindObjectsOfType<UnitBase>()) {
-            if (_vitoryConditions.Contains(unit._me)) 
+            if (Utility.IsUnitInLayerMask(unit, _enemyLayerMask))
                 unit.enemyTurn();
-            else unit.myTurn();
+            else if (Utility.IsUnitInLayerMask(unit, _myLayerMask)) { 
+                if (unit._unitType == Constants._unitType_Tank) {
+                    MapManager_Land.ScoutFromMyPosition((Tank)unit, 
+                        (Vector2Int)MapManager_Land._tilemap.WorldToCell(unit.gameObject.transform.position), _enemyLayerMask);
+                }
+                unit.myTurn();
+            };
         }
     }
 

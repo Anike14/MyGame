@@ -49,11 +49,11 @@ public class UnitMovement : MonoBehaviour
         } else if (selectedObject != null && movingTowards != null && selectedObject.transform.position == movingPosition) {
             if (selectedUnit._unitType == Constants._unitType_Tank) {
                 // using BFS for scouting enemy
-                // if (MapManager_Land.BFS((Tank)selectedUnit, (Vector2Int)MapManager_Land._tilemap.WorldToCell(selectedObject.transform.position),
-                //     -100, myLayer, enemyLayer) == null) {
-                //     MovingDone();
-                //     return;
-                // }
+                if (MapManager_Land.ScoutFromMyPosition((Tank)selectedUnit, 
+                    (Vector2Int)MapManager_Land._tilemap.WorldToCell(selectedObject.transform.position), enemyLayer)) {
+                    MovingDone();
+                    return;
+                }
             }
             if (movingTowards.Count > 0) {
                 movingPosition = MapManager_Land._tilemap.GetCellCenterWorld((Vector3Int)movingTowards.Pop()[0]);
@@ -114,6 +114,7 @@ public class UnitMovement : MonoBehaviour
     }
 
     public void HandleScouting() {
+        selectedUnit.Scouting();
         ActingDone();
     }
 
@@ -125,6 +126,7 @@ public class UnitMovement : MonoBehaviour
     }
 
     public void HandleHiding() {
+        selectedUnit.hiding();
         ActingDone();
     }
 
@@ -182,7 +184,6 @@ public class UnitMovement : MonoBehaviour
     }
 
     private void DeactivateAimingMode() {
-        Debug.Log("deactivating aiming mode");
         selectedEnemyUnit = null;
         selectedEnemyObject = null;
         firableRangeHighlight.ClearFirable();
