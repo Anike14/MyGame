@@ -178,9 +178,7 @@ public class UnitBase : MonoBehaviour
         if (showingForEnemy == 0) {
             OnConcealed?.Invoke(this);
         }
-
-        //Just paint the unit
-        OnActivateActable?.Invoke();
+        ActivateMovable();
     }
 
     public void Scouted() {

@@ -202,11 +202,13 @@ public class UnitMovement : MonoBehaviour
     }
 
     private void Deselect(bool Silience) {
-        if (selectedObject != null)
-            selectedObject.transform.position = originalPosition;
-        if (selectedUnit != null)
-            selectedUnit.PlayDeselectedEffect();
-        movementRangeHighlight.ClearMovable();
+        if (!selectedUnit.IsDestroyed()) {
+            if (selectedObject != null)
+                selectedObject.transform.position = originalPosition;
+            if (selectedUnit != null)
+                selectedUnit.PlayDeselectedEffect();
+            movementRangeHighlight.ClearMovable();
+        }
         movingTowards = null;
         selectedUnit = null;
         selectedObject = null;
