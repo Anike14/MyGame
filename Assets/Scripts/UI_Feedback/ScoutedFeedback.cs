@@ -10,7 +10,6 @@ public class ScoutedFeedback : MonoBehaviour
 
     public void PlayFeedback(bool ignoreThisEvent)
     {
-        Debug.Log(ignoreThisEvent);
         if (ignoreThisEvent || spriteRendrer == null)
             return;
         StartCoroutine(FlashCoroutine());

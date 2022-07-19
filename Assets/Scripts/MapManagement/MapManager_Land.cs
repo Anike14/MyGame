@@ -219,7 +219,7 @@ public class MapManager_Land : MonoBehaviour
                     enemyTank.Scouted();
                 } else {
                     float randomNum = Random.Range(1, 100);
-                    float extraConcealment = 0f;
+                    float extraConcealment = 1f;
                     if (enemyTank.IsHolding()) extraConcealment = 0.5f;
                     else if (enemyTank.IsHiding()) extraConcealment = 1.1f;
                     if (randomNum > enemyTank._stealth[9 - stepDictionary[currentTile[0]]] * extraConcealment) {
