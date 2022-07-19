@@ -14,11 +14,15 @@ public class UnitBase : MonoBehaviour
     [SerializeField]
     private UnityEvent OnDeactivateActable;
 
+    
     [SerializeField]
-    protected UnityEvent<bool> OnScouted;
+    protected UnityEvent OnMyTurn;
 
     [SerializeField]
-    protected UnityEvent OnConcealed;
+    protected UnityEvent OnScouted;
+
+    [SerializeField]
+    protected UnityEvent<UnitBase> OnConcealed;
 
     [SerializeField]
     public string _unitType;
@@ -162,7 +166,7 @@ public class UnitBase : MonoBehaviour
 
     public void myTurn() {
         this.isMyTurn = true;
-        OnScouted?.Invoke(true);
+        OnMyTurn?.Invoke();
         ActivateMovable();
     }
 
@@ -172,7 +176,7 @@ public class UnitBase : MonoBehaviour
             showingForEnemy--;
         }
         if (showingForEnemy == 0) {
-            OnConcealed?.Invoke();
+            OnConcealed?.Invoke(this);
         }
 
         //Just paint the unit
@@ -181,7 +185,7 @@ public class UnitBase : MonoBehaviour
 
     public void Scouted() {
         if (showingForEnemy == 0) {
-            OnScouted?.Invoke(false);
+            OnScouted?.Invoke();
         }
         showingForEnemy = 2;
     }

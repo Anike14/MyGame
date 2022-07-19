@@ -15,7 +15,7 @@ public class ActionDoneFeedBack : MonoBehaviour
     
     private Color originalColor;
 
-    private void Start()
+    private void Awake()
     {
         originalColor = spriteRenderer.color;
     }

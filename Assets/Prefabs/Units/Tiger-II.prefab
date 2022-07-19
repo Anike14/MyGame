@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 3270100401933862788}
   - component: {fileID: 3801918134200217751}
   - component: {fileID: 5551316504455001286}
-  - component: {fileID: 2850992457789810816}
   - component: {fileID: 7441589664808966753}
   - component: {fileID: 7429337752871188523}
   - component: {fileID: 4796952664383431086}
@@ -153,12 +152,12 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  OnScouted:
+  OnMyTurn:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 5551316504455001286}
         m_TargetAssemblyTypeName: ConcealmentFeedback, Assembly-CSharp
-        m_MethodName: StopFeedback
+        m_MethodName: StopFeedbackByMyTurn
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -168,10 +167,13 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 2850992457789810816}
-        m_TargetAssemblyTypeName: ScoutedFeedback, Assembly-CSharp
-        m_MethodName: PlayFeedback
-        m_Mode: 0
+  OnScouted:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 5551316504455001286}
+        m_TargetAssemblyTypeName: ConcealmentFeedback, Assembly-CSharp
+        m_MethodName: StopFeedbackByScouted
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -296,19 +298,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   me: {fileID: 3801918134200217751}
   spriteRenderer: {fileID: 3270100401933862788}
---- !u!114 &2850992457789810816
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 197826875461656137}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4c1f169fd3c787c45a3dc926455b9cbd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  spriteRendrer: {fileID: 3270100401933862788}
 --- !u!114 &7441589664808966753
 MonoBehaviour:
   m_ObjectHideFlags: 0

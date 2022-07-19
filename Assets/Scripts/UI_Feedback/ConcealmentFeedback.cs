@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class ConcealmentFeedback : MonoBehaviour
@@ -7,21 +8,57 @@ public class ConcealmentFeedback : MonoBehaviour
 
     [SerializeField]
     private SpriteRenderer spriteRenderer;
-    
-    private string originalLayerName;
 
-    private void Start()
+    private Color originalColor;
+
+    void Awake()
     {
-        originalLayerName = spriteRenderer.sortingLayerName;
+        originalColor = spriteRenderer.color;
     }
 
     public void PlayFeedback() {
         if (me.IsDestroyed()) return;
-        spriteRenderer.sortingLayerName = "Default";
+        StartCoroutine(hide());
     }
 
-    public void StopFeedback() {
+    public void StopFeedbackByMyTurn() {
         if (me.IsDestroyed()) return;
-        spriteRenderer.sortingLayerName = originalLayerName;
+        StartCoroutine(show());
+    }
+
+    public void StopFeedbackByScouted() {
+        if (me.IsDestroyed()) return;
+        StartCoroutine(FlashCoroutine());
+        StartCoroutine(show());
+    }
+
+    private IEnumerator hide() {
+        yield return new WaitForSeconds(0.01f);
+        Color spriteColor = spriteRenderer.color;
+        spriteColor.a = 0f;
+        spriteRenderer.color = spriteColor;
+    }
+
+    private IEnumerator show() {
+        yield return new WaitForSeconds(0.01f);
+        spriteRenderer.color = originalColor;
+        
+        Color spriteColor = spriteRenderer.color;
+        spriteColor.a = 1f;
+        spriteRenderer.color = spriteColor;
+    }
+
+    private IEnumerator FlashCoroutine()
+    {
+        Color spriteColor = spriteRenderer.color;
+        for (int i = 0; i < 5; i++) {
+            spriteColor.a = 0;
+            spriteRenderer.color = spriteColor;
+            yield return new WaitForSeconds(0.3f);
+
+            spriteColor.a = 1;
+            spriteRenderer.color = spriteColor;
+            yield return new WaitForSeconds(0.3f);
+        }
     }
 }

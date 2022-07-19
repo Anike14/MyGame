@@ -84,7 +84,7 @@ public class Tank : UnitBase
 		_fireAudio.Play();
 		if (!isMyTurn) {
 			if (this.showingForEnemy == 0)
-            	OnScouted?.Invoke(false);
+            	OnScouted?.Invoke();
 			else this.Scouted();
 		}
 		// let's have a 0.35s waiting for playing the main gun sound
@@ -102,8 +102,8 @@ public class Tank : UnitBase
 			}
 		}
 		
-		// let's have a 0.6s waiting for the shell to arrive
-		yield return new WaitForSeconds(0.35f);
+		// let's have a 0.8s waiting for the shell to arrive
+		yield return new WaitForSeconds(0.8f);
 		if (penetrationResult) {
 			// play enemy calculation feedback
 			enemy.getPenetrated();
