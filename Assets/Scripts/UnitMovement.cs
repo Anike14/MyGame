@@ -73,6 +73,10 @@ public class UnitMovement : MonoBehaviour
         this.selectedObject = selection;
         movingPosition = this.selectedObject.transform.position;
         selectedUnit = selectedObject.transform.GetChild(0).GetComponent<UnitBase>();
+        if (selectedUnit.IsDestroyed()) {
+            Deselect();
+            return;
+        }
         if (selectedUnit.IsActable()) _selectionPanel.SetActive(true);
         selectedUnit.PlaySelectedEffect();
         if (selectedUnit._unitType == Constants._unitType_Tank) {
