@@ -10,6 +10,8 @@ public class Tank : UnitBase
 
     [SerializeField]
     private AudioSource _fireAudio;
+    [SerializeField]
+    private AudioSource _fireRadio;
 
     [SerializeField]
     private UnityEvent OnPenetrated;
@@ -81,7 +83,11 @@ public class Tank : UnitBase
 
 	private IEnumerator fire(Tank enemy) {
 		// play fire feedback
+		_fireRadio.Play();
+		// let's have a 0.35s waiting for playing the radio
+		yield return new WaitForSeconds(0.35f);
 		_fireAudio.Play();
+		
 		if (!isMyTurn) {
 			if (this.showingForEnemy == 0)
             	OnScouted?.Invoke();

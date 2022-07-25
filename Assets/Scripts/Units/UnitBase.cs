@@ -30,6 +30,8 @@ public class UnitBase : MonoBehaviour
     [SerializeField]
     protected AudioSource _selectedAudio;
 
+    [SerializeField]
+    protected AudioSource _selectedRadio;
     protected bool _idled = false;
 
     [SerializeField]
@@ -37,6 +39,9 @@ public class UnitBase : MonoBehaviour
 
     [SerializeField]
     protected AudioSource _movingAudio;
+
+    [SerializeField]
+    protected AudioSource _movingRadio;
 
     [SerializeField]
     protected AudioSource _deselectedAudio;
@@ -108,6 +113,7 @@ public class UnitBase : MonoBehaviour
     public void PlaySelectedEffect() {
         if (_selectedAudio.isPlaying) return;
         _selectedAudio.Play();
+        _selectedRadio.Play();
         _idled = true;
         StartCoroutine(PlayIdleEffect());
     }
@@ -121,6 +127,7 @@ public class UnitBase : MonoBehaviour
         if (_movingAudio.isPlaying) return;
         if (_canMove) {
             _movingAudio.Play();
+            _movingRadio.Play();
         }
     }
 
