@@ -17,9 +17,6 @@ public class UnitMovement : MonoBehaviour
     private UnityEvent OnSelectedObjectFirable;
 
     [SerializeField]
-    private UnityEvent<GameObject> OnTargetObjectDestroyed;
-
-    [SerializeField]
     private MovementRangeHighlight movementRangeHighlight;
 
     [SerializeField]
@@ -161,7 +158,7 @@ public class UnitMovement : MonoBehaviour
                 && selectedObject.transform.localScale.x < 0) FlipUnit();
             tank.FireAt(enemyTank);
         }
-        ActingDone();
+        this.ActingDone(true);
     }
 
     private void FlipUnit() {
@@ -180,11 +177,22 @@ public class UnitMovement : MonoBehaviour
         movingTowards = null;
     }
 
-    private void ActingDone() {
+    private void ActingDone() { this.ActingDone(false); }
+
+    private void ActingDone(bool wasFired) {
         originalPosition = selectedObject.transform.position;
-        selectedUnit.DeactivateActable();
         firableRangeHighlight.ClearFirable();
-        Deselect();
+        if (wasFired) {
+            movementRangeHighlight.ClearMovable();
+            movingTowards = null;
+            selectedUnit = null;
+            selectedObject = null;
+            _selectionPanel.SetActive(false);
+            OnSelectedObjectDeselect?.Invoke();
+        } else {
+            selectedUnit.DeactivateActable();
+            Deselect();
+        }
     }
 
     private void DeactivateAimingMode() {

@@ -1,4 +1,6 @@
+using System;
 using System.Collections;
+
 using UnityEngine;
 
 public class FiringAnimationFeedBack : MonoBehaviour
@@ -10,11 +12,15 @@ public class FiringAnimationFeedBack : MonoBehaviour
     {
         if (tankObject == null) return;
         originalPosition = tankObject.transform.position;
-        StartCoroutine(FirePowerCoroutine());
+        StartCoroutine(FirePowerCoroutine(AfterFeedback));
+    }
+
+    private void AfterFeedback() {
+        StopAllCoroutines();
         tankObject.transform.position = originalPosition;
     }
 
-    private IEnumerator FirePowerCoroutine()
+    private IEnumerator FirePowerCoroutine(Action callback)
     {
         float xxx = tankObject.transform.position.x;
         for (int i = 0; i < 4; i++) {
@@ -38,6 +44,6 @@ public class FiringAnimationFeedBack : MonoBehaviour
             tankObject.transform.position = new Vector3(xxx, originalPosition.y, originalPosition.z);
             yield return new WaitForSeconds(0.08f);
         }
-        StopAllCoroutines();
+        callback();
     }
 }

@@ -32,6 +32,7 @@ public class UnitBase : MonoBehaviour
 
     [SerializeField]
     protected AudioSource _selectedRadio;
+    
     protected bool _idled = false;
 
     [SerializeField]
@@ -42,6 +43,10 @@ public class UnitBase : MonoBehaviour
 
     [SerializeField]
     protected AudioSource _movingRadio;
+
+    
+    [SerializeField]
+    protected AudioSource _enemyEngagedRadio;
 
     [SerializeField]
     protected AudioSource _deselectedAudio;
@@ -145,6 +150,10 @@ public class UnitBase : MonoBehaviour
             _selectedAudio.Stop();
             _idleAudio.Stop();
         }
+    }
+
+    public void PlayEngageEffect() {
+        _enemyEngagedRadio.Play();
     }
 
     public bool IsMoving() {

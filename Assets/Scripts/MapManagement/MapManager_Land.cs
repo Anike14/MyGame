@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 
 using UnityEngine;
@@ -215,7 +214,10 @@ public class MapManager_Land : MonoBehaviour
             if (enemyCollider != null) {
                 Tank enemyTank = enemyCollider.gameObject.GetComponentInChildren<Tank>();
                 if (stepDictionary[currentTile[0]] <= 3) {
-                    if (!enemyTank.IsScouted()) res = true;
+                    if (!enemyTank.IsScouted()) {
+                        res = true;
+                        tank.PlayEngageEffect();
+                    }
                     enemyTank.Scouted();
                 } else {
                     float randomNum = Random.Range(1, 100);
@@ -223,7 +225,10 @@ public class MapManager_Land : MonoBehaviour
                     if (enemyTank.IsHolding()) extraConcealment = 0.5f;
                     else if (enemyTank.IsHiding()) extraConcealment = 1.1f;
                     if (randomNum > enemyTank._stealth[9 - stepDictionary[currentTile[0]]] * extraConcealment) {
-                        if (!enemyTank.IsScouted()) res = true;
+                        if (!enemyTank.IsScouted()) {
+                            res = true;
+                            tank.PlayEngageEffect();
+                        }
                         enemyTank.Scouted();
                     }
                 }

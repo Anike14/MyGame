@@ -10,8 +10,12 @@ public class Tank : UnitBase
 
     [SerializeField]
     private AudioSource _fireAudio;
+
     [SerializeField]
     private AudioSource _fireRadio;
+
+    [SerializeField]
+    private AudioSource _targetDestroyedRadio;
 
     [SerializeField]
     private UnityEvent OnPenetrated;
@@ -78,10 +82,10 @@ public class Tank : UnitBase
 			Similar questions have been asked many times before, on StackOverflow and on Unity Answers.
 			Coroutines do not pause the execution of the function they have been called into. You have to put your logic inside a big coroutine instead :
 		**/
-		StartCoroutine(fire(enemy));
+		StartCoroutine(Fire(enemy));
 	}
 
-	private IEnumerator fire(Tank enemy) {
+	private IEnumerator Fire(Tank enemy) {
 		// play fire feedback
 		_fireRadio.Play();
 		// let's have a 0.35s waiting for playing the radio
@@ -113,10 +117,15 @@ public class Tank : UnitBase
 		if (penetrationResult) {
 			// play enemy calculation feedback
 			enemy.getPenetrated();
+			// let's have a 0.8s waiting for the penetration effect to play
+			yield return new WaitForSeconds(0.8f);
+			_targetDestroyedRadio.Play();
 		} else {
 			// play enemy calculation feedback
 			enemy.getScratched();
 		}
+		this.PlayDeselectedEffect();
+		this.DeactivateActable();
 	}
 
 	private void getPenetrated() {
