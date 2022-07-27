@@ -57,6 +57,18 @@ public class UnitBase : MonoBehaviour
 	[SerializeField]
 	public float[] _stealth = new float[6];
 
+	[SerializeField]
+	public float[] _armor;
+
+	[SerializeField]
+	public float[] _armorWeakness;
+    
+	[SerializeField]
+	public float _penetration;
+
+	[SerializeField]
+	public float _gunStability;
+
 	protected bool scoutPos = false;
 
 	protected bool holdPos = false;
@@ -70,6 +82,10 @@ public class UnitBase : MonoBehaviour
             MapManager_Land.ScoutFromMyPosition((Tank)this, 
                 (Vector2Int)MapManager_Land._tilemap.WorldToCell(this.gameObject.transform.position), enemyLayer);
         }
+    }
+
+    public virtual string GetModelName() {
+        return this.GetType().Name;
     }
 
 	public void ResetPos() {

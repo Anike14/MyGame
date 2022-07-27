@@ -15,6 +15,9 @@ public class UnitMovement : MonoBehaviour
 
     [SerializeField]
     private UnityEvent OnSelectedObjectFirable;
+    
+    [SerializeField]
+    private UnityEvent<UnitBase, GameObject> OnSelectedInfoGet;
 
     [SerializeField]
     private MovementRangeHighlight movementRangeHighlight;
@@ -24,6 +27,12 @@ public class UnitMovement : MonoBehaviour
 
     [SerializeField]
 	private GameObject _selectionPanel;
+
+    [SerializeField]
+	private GameObject _selectionInfoPanel_land;
+
+    [SerializeField]
+	private GameObject _targetInfoPanel_land;
     
     // selected unit
 	private GameObject selectedObject;
@@ -84,6 +93,8 @@ public class UnitMovement : MonoBehaviour
                 movementRangeHighlight.PaintTileForMovable(movableRange);
             }
             originalPosition = selectedObject.transform.position;
+            _selectionInfoPanel_land.SetActive(true);
+            OnSelectedInfoGet.Invoke(selectedUnit, _selectionInfoPanel_land);
         }
 	}
 
@@ -141,8 +152,9 @@ public class UnitMovement : MonoBehaviour
         if (selectedEnemyUnit._unitType == Constants._unitType_Tank) {
             Tank enemyTank = (Tank)selectedEnemyUnit;
             // show enemyTank on the sidebar
-            // add enemyTank selection feedback
+            _targetInfoPanel_land.SetActive(true);
             OnSelectedObjectFirable?.Invoke();
+            OnSelectedInfoGet.Invoke(selectedEnemyUnit, _targetInfoPanel_land);
         }
     }
 
@@ -199,6 +211,7 @@ public class UnitMovement : MonoBehaviour
         selectedEnemyUnit = null;
         selectedEnemyObject = null;
         firableRangeHighlight.ClearFirable();
+        _targetInfoPanel_land.SetActive(false);
         if (selectedUnit.IsMovable())
             movementRangeHighlight.PaintTileForMovable(movableRange);
         else Deselect();
@@ -216,10 +229,14 @@ public class UnitMovement : MonoBehaviour
                 selectedObject.transform.position = originalPosition;
             movementRangeHighlight.ClearMovable();
         }
+        selectedEnemyUnit = null;
+        selectedEnemyObject = null;
         movingTowards = null;
         selectedUnit = null;
         selectedObject = null;
         _selectionPanel.SetActive(false);
+        _selectionInfoPanel_land.SetActive(false);
+        _targetInfoPanel_land.SetActive(false);
         if (!Silience) OnSelectedObjectDeselect?.Invoke();
     }
 }

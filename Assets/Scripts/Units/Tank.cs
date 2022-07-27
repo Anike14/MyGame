@@ -63,18 +63,6 @@ public class Tank : UnitBase
 	[SerializeField]
 	public float _mountainConsumption;
 
-	[SerializeField]
-	public float _penetration;
-
-	[SerializeField]
-	public float _gunStability;
-
-	[SerializeField]
-	public float[] _armor;
-
-	[SerializeField]
-	public float[] _armorWeakness;
-
 	public void FireAt(Tank enemy) {
 		/**
 			https://stackoverflow.com/questions/44246629/coroutine-and-waitforseconds-not-working-as-planned:

@@ -1,7 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 public class TigerTwo : Tank
 {
     void Start(){
@@ -31,4 +27,9 @@ public class TigerTwo : Tank
 
         _stealth = new []{70f,50f,40f,30f,20f,10f};
     }
+
+    public override string GetModelName() {
+        return "Tiger-II";
+    }
+
 }
