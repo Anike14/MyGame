@@ -14,25 +14,25 @@ public class TargetInfoPanelFeedback : MonoBehaviour
                     text.text = "Model: " + unit.GetModelName();
                     break;
                 case "ArmorStrongest": 
-                    text.text = "The Strongest Armor: " + unit._armor[0];
+                    text.text = "The Strongest Armor: " + unit._armor[0] + "mm";
                     break;
                 case "ArmorStrongestCover": 
                     text.text = "The Strongest Armor Cover Rate: " + unit._armorWeakness[0] + "%";
                     break;
                 case "ArmorMed": 
-                    text.text = "The Generic Armor: " + unit._armor[1];
+                    text.text = "The Generic Armor: " + unit._armor[1] + "mm";
                     break;
                 case "ArmorMedCover": 
                     text.text = "The Generic Armor Cover Rate: " + unit._armorWeakness[1] + "%";
                     break;
                 case "ArmorWeak": 
-                    text.text = "The Weak Point of Armor: " + unit._armor[2];
+                    text.text = "The Weak Point of Armor: " + unit._armor[2] + "mm";
                     break;
                 case "ArmorWeakCover": 
                     text.text = "The Weak Point Armor Rate: " + unit._armorWeakness[2] + "%";
                     break;
                 case "GunPenetration": 
-                    text.text = "Gunfire Penetration: " + unit._penetration;
+                    text.text = "Gunfire Penetration: " + unit._penetration + "mm";
                     break;
             }
         }
