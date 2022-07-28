@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5776981260230570145}
   - component: {fileID: 3270100401933862788}
-  - component: {fileID: 3801918134200217751}
+  - component: {fileID: 3027532054022594020}
   - component: {fileID: 5551316504455001286}
   - component: {fileID: 7441589664808966753}
   - component: {fileID: 7429337752871188523}
@@ -29,7 +29,7 @@ GameObject:
   - component: {fileID: 5082355363360462}
   - component: {fileID: 7175605145568207121}
   m_Layer: 0
-  m_Name: Tiger-II
+  m_Name: Leopard-I
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -91,7 +91,7 @@ SpriteRenderer:
   m_SortingLayerID: -881745651
   m_SortingLayer: 8
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: f2eabc9cfd26fc84ea0cbbd408b4d6bb, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 0899c10b7b5fcbf479f98a5198fd6581, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -102,7 +102,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &3801918134200217751
+--- !u!114 &3027532054022594020
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -111,7 +111,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 197826875461656137}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 893e69215da574c40999fb8b0781182a, type: 3}
+  m_Script: {fileID: 11500000, guid: 511cf6e9da0302148a7571780547c3d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _me: {fileID: 3633781401086625690}
@@ -120,7 +120,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 2174606586277415014}
         m_TargetAssemblyTypeName: ActionDoneFeedBack, Assembly-CSharp
-        m_MethodName: StopFeedback
+        m_MethodName: PlayFeedback
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -130,8 +130,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 3801918134200217751}
-        m_TargetAssemblyTypeName: Tank, Assembly-CSharp
+      - m_Target: {fileID: 3027532054022594020}
+        m_TargetAssemblyTypeName: UnitBase, Assembly-CSharp
         m_MethodName: ResetPos
         m_Mode: 1
         m_Arguments:
@@ -147,7 +147,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 2174606586277415014}
         m_TargetAssemblyTypeName: ActionDoneFeedBack, Assembly-CSharp
-        m_MethodName: PlayFeedback
+        m_MethodName: StopFeedback
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -212,22 +212,22 @@ MonoBehaviour:
   _deselectedAudio: {fileID: 3247424898359754340}
   _viewRange: 7
   _stealth:
+  - 95
+  - 85
+  - 75
+  - 60
+  - 45
+  - 30
+  _armor:
   - 70
   - 50
-  - 40
   - 30
-  - 20
-  - 10
-  _armor:
-  - 220
-  - 175
-  - 90
   _armorWeakness:
+  - 40
   - 50
-  - 45
-  - 5
-  _penetration: 180
-  _gunStability: 0.02
+  - 10
+  _penetration: 260
+  _gunStability: 0.01
   OnFiring:
     m_PersistentCalls:
       m_Calls:
@@ -278,22 +278,22 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   _getScratchedAudio: {fileID: 9002994682068739587}
-  _fireRange: 6
-  _maximumMovement: 4
+  _fireRange: 9
+  _maximumMovement: 5
   _landExtraCost: 0
   _waterExtraCost: 2
-  _seaExtraCost: 10000
+  _seaExtraCost: 100000
   _grassExtraCost: 0
-  _forestExtraCost: 3
+  _forestExtraCost: 2
   _rockExtraCost: 1
-  _mountainExtraCost: 6
-  _landStepConsumption: 1.5
-  _waterStepConsumption: 2
-  _seaStepConsumption: 10000
-  _grassStepConsumption: 1.5
-  _forestStepConsumption: 6
-  _rockStepConsumption: 9
-  _mountainConsumption: 20
+  _mountainExtraCost: 4
+  _landStepConsumption: 1
+  _waterStepConsumption: 1
+  _seaStepConsumption: 100000
+  _grassStepConsumption: 1
+  _forestStepConsumption: 3
+  _rockStepConsumption: 5
+  _mountainConsumption: 8
 --- !u!114 &5551316504455001286
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -306,7 +306,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8c4decd7522a5c4da24829ecf7a1275, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  me: {fileID: 3801918134200217751}
+  me: {fileID: 0}
   spriteRenderer: {fileID: 3270100401933862788}
 --- !u!114 &7441589664808966753
 MonoBehaviour:
@@ -333,7 +333,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 691c52219b349c44c8cefdcf0efa5ad4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tankObject: {fileID: 3801918134200217751}
+  tankObject: {fileID: 0}
   spriteRenderer: {fileID: 3270100401933862788}
   penetratedColor: {r: 0.6886792, g: 0.04223035, b: 0.04223035, a: 1}
   destroyedColor: {r: 0.46226418, g: 0.0021804967, b: 0.0021804967, a: 1}
@@ -364,7 +364,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 66535d41d5ab9dc42b3060bbae2469ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  me: {fileID: 3801918134200217751}
+  me: {fileID: 0}
   spriteRenderer: {fileID: 3270100401933862788}
   actionDoneColor: {r: 0.5566038, g: 0.5287736, b: 0.41745284, a: 1}
 --- !u!82 &1495485146779869032
@@ -1530,7 +1530,7 @@ GameObject:
   - component: {fileID: 3633781401086625691}
   - component: {fileID: 3633781401086625692}
   m_Layer: 7
-  m_Name: Tiger-II
+  m_Name: Leopard-I
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
