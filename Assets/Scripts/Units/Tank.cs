@@ -89,15 +89,19 @@ public class Tank : UnitBase
 		yield return new WaitForSeconds(0.35f);
 		OnFiring?.Invoke();
 
-		int randomNum = Random.Range(1, 100);
+		double randomNum = Random.Range(1, 100);
 		float randomPenetrationRatio = 1 + Random.Range(-_gunStability, _gunStability);
+		Debug.Log("randomNum: " + randomNum);
 		bool penetrationResult = false;
-		for (int i = 2; i >= 0; i--) {
+		for (int i = 0; i < 3; i++) {
+			Debug.Log("enemy._armorWeakness[i]: " + enemy._armorWeakness[i]);
 			if (randomNum < enemy._armorWeakness[i]) {
 				penetrationResult = this._penetration * randomPenetrationRatio > 
 					(IsHolding() ? enemy._armor[i] * 1.05 : enemy._armor[i]);
+				Debug.Log("this._penetration: " + this._penetration);
+				Debug.Log("enemy._armor[i]: " + enemy._armor[i]);
 				break;
-			}
+			} else randomNum = randomNum - enemy._armorWeakness[i];
 		}
 		
 		// let's have a 0.8s waiting for the shell to arrive

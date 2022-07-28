@@ -23,7 +23,7 @@ public class LeopardOne : Tank
         _armor = new []{70f, 50f, 30f};
         _armorWeakness = new []{40f, 50f, 10f};
 
-        _penetration = 260f;
+        _penetration = 221f;
 
         _stealth = new []{95f,85f,75f,60f,45f,30f};
     }

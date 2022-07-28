@@ -120,7 +120,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 2174606586277415014}
         m_TargetAssemblyTypeName: ActionDoneFeedBack, Assembly-CSharp
-        m_MethodName: PlayFeedback
+        m_MethodName: StopFeedback
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -147,7 +147,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 2174606586277415014}
         m_TargetAssemblyTypeName: ActionDoneFeedBack, Assembly-CSharp
-        m_MethodName: StopFeedback
+        m_MethodName: PlayFeedback
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -226,7 +226,7 @@ MonoBehaviour:
   - 40
   - 50
   - 10
-  _penetration: 260
+  _penetration: 221
   _gunStability: 0.01
   OnFiring:
     m_PersistentCalls:
@@ -306,7 +306,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8c4decd7522a5c4da24829ecf7a1275, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  me: {fileID: 0}
+  me: {fileID: 3027532054022594020}
   spriteRenderer: {fileID: 3270100401933862788}
 --- !u!114 &7441589664808966753
 MonoBehaviour:
@@ -333,7 +333,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 691c52219b349c44c8cefdcf0efa5ad4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tankObject: {fileID: 0}
+  tankObject: {fileID: 3027532054022594020}
   spriteRenderer: {fileID: 3270100401933862788}
   penetratedColor: {r: 0.6886792, g: 0.04223035, b: 0.04223035, a: 1}
   destroyedColor: {r: 0.46226418, g: 0.0021804967, b: 0.0021804967, a: 1}
@@ -364,9 +364,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 66535d41d5ab9dc42b3060bbae2469ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  me: {fileID: 0}
+  me: {fileID: 3027532054022594020}
   spriteRenderer: {fileID: 3270100401933862788}
-  actionDoneColor: {r: 0.5566038, g: 0.5287736, b: 0.41745284, a: 1}
+  actionDoneColor: {r: 0.4811321, g: 0.39596313, b: 0.043120317, a: 1}
 --- !u!82 &1495485146779869032
 AudioSource:
   m_ObjectHideFlags: 0
